@@ -26,6 +26,7 @@
   "resources":[
     {"id":{"name":"oActor","path":"objects/oActor/oActor.yy",},},
     {"id":{"name":"oBlock","path":"objects/oBlock/oBlock.yy",},},
+    {"id":{"name":"oGame","path":"objects/oGame/oGame.yy",},},
     {"id":{"name":"oHalfBlock","path":"objects/oHalfBlock/oHalfBlock.yy",},},
     {"id":{"name":"oOneWayBlock","path":"objects/oOneWayBlock/oOneWayBlock.yy",},},
     {"id":{"name":"oPlayer","path":"objects/oPlayer/oPlayer.yy",},},
