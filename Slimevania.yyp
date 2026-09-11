@@ -31,6 +31,8 @@
     {"id":{"name":"oOneWayBlock","path":"objects/oOneWayBlock/oOneWayBlock.yy",},},
     {"id":{"name":"oPlayer","path":"objects/oPlayer/oPlayer.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"state","path":"scripts/state/state.yy",},},
+    {"id":{"name":"stateMachine","path":"scripts/stateMachine/stateMachine.yy",},},
     {"id":{"name":"vector2","path":"scripts/vector2/vector2.yy",},},
     {"id":{"name":"sBlock","path":"sprites/sBlock/sBlock.yy",},},
     {"id":{"name":"sHalfBlock","path":"sprites/sHalfBlock/sHalfBlock.yy",},},
