@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"stateMachine",
+  "%Name":"scVector2",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"stateMachine",
+  "name":"scVector2",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",
