@@ -1,19 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"oPowerDash",
+  "%Name":"oCrackedBlock",
   "eventList":[],
   "managed":true,
-  "name":"oPowerDash",
-  "overriddenProperties":[
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"oPowerUp","path":"objects/oPowerUp/oPowerUp.yy",},"propertyId":{"name":"nome","path":"objects/oPowerUp/oPowerUp.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"\"powerDash\"",},
-  ],
+  "name":"oCrackedBlock",
+  "overriddenProperties":[],
   "parent":{
     "name":"Objects",
     "path":"folders/Objects.yy",
   },
   "parentObjectId":{
-    "name":"oPowerUp",
-    "path":"objects/oPowerUp/oPowerUp.yy",
+    "name":"oBlock",
+    "path":"objects/oBlock/oBlock.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -33,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sPowerDash",
-    "path":"sprites/sPowerDash/sPowerDash.yy",
+    "name":"sCrackedBlock",
+    "path":"sprites/sCrackedBlock/sCrackedBlock.yy",
   },
   "spriteMaskId":null,
   "visible":true,

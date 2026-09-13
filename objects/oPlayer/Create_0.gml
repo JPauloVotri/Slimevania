@@ -12,5 +12,24 @@ MOVEMENT_SPEED = 2;
         right: false,
         down: false,
         jump: false,
+		usePower: false,
     };
+	
+	facing_x = 0;
+#endregion
+
+#region Powerups
+	powersList = [];
+	activePower = "";
+	recharge = 0;
+	hitWallY = false;
+	
+	// PowerDash
+	dashing = false;
+	dash_timer = 0;
+	dash_duration = 0.2;
+	dash_speed = 8;
+	dash_dir_x = 0;
+	dash_dir_y = 0;
+	dash_recharge = 2;
 #endregion

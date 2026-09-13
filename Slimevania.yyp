@@ -26,6 +26,7 @@
   "resources":[
     {"id":{"name":"oActor","path":"objects/oActor/oActor.yy",},},
     {"id":{"name":"oBlock","path":"objects/oBlock/oBlock.yy",},},
+    {"id":{"name":"oCrackedBlock","path":"objects/oCrackedBlock/oCrackedBlock.yy",},},
     {"id":{"name":"oHalfBlock","path":"objects/oHalfBlock/oHalfBlock.yy",},},
     {"id":{"name":"oOneWayBlock","path":"objects/oOneWayBlock/oOneWayBlock.yy",},},
     {"id":{"name":"oPlayer","path":"objects/oPlayer/oPlayer.yy",},},
@@ -33,8 +34,10 @@
     {"id":{"name":"oPowerUp","path":"objects/oPowerUp/oPowerUp.yy",},},
     {"id":{"name":"oTransitionLine","path":"objects/oTransitionLine/oTransitionLine.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"PowerUP","path":"scripts/PowerUP/PowerUP.yy",},},
     {"id":{"name":"vector2","path":"scripts/vector2/vector2.yy",},},
     {"id":{"name":"sBlock","path":"sprites/sBlock/sBlock.yy",},},
+    {"id":{"name":"sCrackedBlock","path":"sprites/sCrackedBlock/sCrackedBlock.yy",},},
     {"id":{"name":"sHalfBlock","path":"sprites/sHalfBlock/sHalfBlock.yy",},},
     {"id":{"name":"sOneWayBlock","path":"sprites/sOneWayBlock/sOneWayBlock.yy",},},
     {"id":{"name":"sPlayer","path":"sprites/sPlayer/sPlayer.yy",},},
