@@ -1,7 +1,9 @@
 {
   "$GMObject":"",
   "%Name":"oPowerUp",
-  "eventList":[],
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
   "name":"oPowerUp",
   "overriddenProperties":[],
@@ -25,6 +27,7 @@
   "physicsStartAwake":true,
   "properties":[
     {"$GMObjectProperty":"v2","%Name":"nome","filters":[],"listItems":[],"multiselect":false,"name":"nome","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"\"Nenhum\"","varType":2,},
+    {"$GMObjectProperty":"v2","%Name":"power_id","filters":[],"listItems":[],"multiselect":false,"name":"power_id","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"\"default\"","varType":2,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

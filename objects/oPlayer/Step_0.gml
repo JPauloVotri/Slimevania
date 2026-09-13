@@ -71,13 +71,14 @@
 					}
 				};
 			} else if (_inst_y.object_index == oCrackedBlock) {
+				array_push(global.blocos_quebrados, _inst_y.id.block_id);
 				instance_destroy(_inst_y.id);
 			};
 		};
 		
 		if (_inst_x) {
-			show_debug_message("Ola")
 			if (_inst_x.object_index == oCrackedBlock) {
+				array_push(global.blocos_quebrados, _inst_x.id.block_id);
 				instance_destroy(_inst_x.id);
 			};
 		};

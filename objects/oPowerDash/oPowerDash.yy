@@ -6,6 +6,7 @@
   "name":"oPowerDash",
   "overriddenProperties":[
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"oPowerUp","path":"objects/oPowerUp/oPowerUp.yy",},"propertyId":{"name":"nome","path":"objects/oPowerUp/oPowerUp.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"\"powerDash\"",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"oPowerUp","path":"objects/oPowerUp/oPowerUp.yy",},"propertyId":{"name":"power_id","path":"objects/oPowerUp/oPowerUp.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"\"powerDash\"",},
   ],
   "parent":{
     "name":"Objects",

@@ -1,3 +1,3 @@
-var _roomManager = new RoomManager();
-
-show_debug_message(global.matrix);
+global.blocos_quebrados = [];
+global.powerups = [];
+global.roomManager = new RoomManager();
