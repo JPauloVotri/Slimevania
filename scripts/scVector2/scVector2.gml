@@ -37,7 +37,7 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Normaliza este vetor e sobrescreve seus valores.
-    ///       Não retorna nenhum valor.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static normalizedRW = function () {
         var _lng = magnitude();
 
@@ -45,6 +45,8 @@ function Vector2(_x, _y) constructor {
             x = x / _lng;
             y = y / _lng;
         }
+
+        return self;
     }
 
     /// @desc Soma dois vetores e retorna um novo vetor resultante.
@@ -56,11 +58,12 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Adiciona outro vetor a este e sobrescreve o valor atual.
-    ///       Não retorna nenhum valor.
     /// @param {Struct.Vector2} _a O vetor a ser somado.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static addRW = function (_a) {
         x += _a.x;
         y += _a.y;
+        return self;
     }
 
     /// @desc Subtrai dois vetores e retorna o vetor diferença.
@@ -72,11 +75,12 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Subtrai um vetor deste vetor e sobrescreve o valor atual.
-    ///       Não retorna nenhum valor.
     /// @param {Struct.Vector2} _a O vetor a ser subtraído.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static subtractRW = function (_a) {
         x -= _a.x;
         y -= _a.y;
+        return self;
     }
 
     /// @desc Multiplica componente a componente de _a por _b.
@@ -89,11 +93,12 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Multiplica cada componente deste vetor por um outro vetor e sobrescreve o valor atual.
-    ///       Equivalente a: (x * _a.x, y * _a.y).
     /// @param {Struct.Vector2} _a O vetor pelo qual será multiplicado.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static componentMultiplyRW = function (_a) {
         x = x * _a.x;
         y = y * _a.y;
+        return self;
     }
 
     /// @desc Multiplica um vetor por um escalar e retorna um novo vetor.
@@ -105,11 +110,12 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Escala este vetor por um valor escalar e sobrescreve o valor atual.
-    ///       Não retorna nenhum valor.
     /// @param {real} _s O valor escalar usado para multiplicar o vetor.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static scaleRW = function (_s) {
         x = x * _s;
         y = y * _s;
+        return self;
     }
 
     /// @desc Arredonda cada componente para o inteiro mais próximo.
@@ -119,10 +125,11 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Arredonda cada componente deste vetor e sobrescreve o valor atual.
-    ///       Não retorna nenhum valor.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static rndRW = function () {
         x = round(x);
         y = round(y);
+        return self;
     }
 
     /// @desc Arredonda cada componente para baixo, em direção ao inteiro menor.
@@ -132,10 +139,11 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Arredonda cada componente deste vetor para baixo e sobrescreve o valor atual.
-    ///       Não retorna nenhum valor.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static flrRW = function () {
         x = floor(x);
         y = floor(y);
+        return self;
     }
 
     /// @desc Retorna o valor absoluto de cada componente do vetor.
@@ -145,9 +153,11 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Sobrescreve cada componente deste vetor com seu valor absoluto.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static absRW = function () {
         x = abs(x);
         y = abs(y);
+        return self;
     }
 
     /// @desc Retorna o sinal de cada componente do vetor.
@@ -157,9 +167,11 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Sobrescreve cada componente deste vetor com seu sinal.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static signRW = function () {
         x = sign(x);
         y = sign(y);
+        return self;
     }
 
     /// @desc Arredonda cada componente para cima, em direção ao inteiro maior.
@@ -169,10 +181,11 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Arredonda cada componente deste vetor para cima e sobrescreve o valor atual.
-    ///       Não retorna nenhum valor.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static clingRW = function () {
         x = ceil(x);
         y = ceil(y);
+        return self;
     }
 
     /// @desc Calcula o produto escalar entre dois vetores.
@@ -204,9 +217,11 @@ function Vector2(_x, _y) constructor {
     /// @param {Struct.Vector2} _a O vetor inicial.
     /// @param {Struct.Vector2} _b O vetor final.
     /// @param {real} _t O fator de interpolação.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static lerpV2RW = function (_a, _b, _t) {
         x = lerp(_a.x, _b.x, _t);
         y = lerp(_a.y, _b.y, _t);
+        return self;
     }
 
     /// @desc Retorna a reflexão do vetor _a em torno da normal da superfície _n.
@@ -220,9 +235,11 @@ function Vector2(_x, _y) constructor {
 
     /// @desc Reflete este vetor em torno da normal _n e modifica o valor atual.
     /// @param {Struct.Vector2} _n A normal da superfície usada como eixo de reflexão.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static reflectRW = function (_n) {
         _n.normalizedRW();
         self.subtractRW(scale(_n, scale(dot(self, _n), 2)));
+        return self;
     }
 
     /// @desc Retorna um vetor rotacionado por um número de radianos.
@@ -236,24 +253,30 @@ function Vector2(_x, _y) constructor {
     /// @desc Rotaciona este vetor em _r radianos e sobrescreve o valor atual.
     ///       Não retorna nenhum valor.
     /// @param {real} _r Quantidade de rotação, em radianos.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static rotateRW = function (_r) {
         x = x * cos(_r) - y * sin(_r);
         y = x * sin(_r) + y * cos(_r);
+        return self;
     }
 
     /// @desc Sobrescreve este vetor com novos valores sem alocar ou desalocar memória.
     /// @param {real} _x Componente x do vetor.
     /// @param {real} _y Componente y do vetor.
+    /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static rewrite = function (_x, _y) {
         x = _x;
         y = _y;
+        return self;
     }
 
     /// @desc Sobrescreve este vetor com novos valores sem alocar ou desalocar memória.
     /// @param {Struct.Vector2} _a O vetor com os novos valores.
+    /// @returns {Struct.Vector2} A própria instância do vetor.
     static rewriteRW = function (_a) {
         x = _a.x;
         y = _a.y;
+        return self;
     }
 
     /// @desc Cria uma cópia deste vetor em vez de uma referência ao mesmo objeto.
