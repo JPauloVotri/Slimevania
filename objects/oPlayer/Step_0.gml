@@ -1,8 +1,9 @@
 #region Inputs
     keys.left = keyboard_check(ord("A"));
     keys.right = keyboard_check(ord("D"));
-    keys.down = keyboard_check_pressed(ord("S"));
-    keys.jump = keyboard_check_pressed(vk_space) || keyboard_check_pressed(ord("W"));
+    keys.down = keyboard_check(ord("S"));
+	keys.up = keyboard_check(ord("W"));
+    keys.jump = keyboard_check_pressed(vk_space);
 	
 	if (recharge <= 0) {
 		keys.usePower = keyboard_check_pressed(vk_shift);
@@ -10,12 +11,14 @@
 #endregion
 
 #region Cálculo do movimento
-    var _dir = keys.right - keys.left;
+    var _dir_x = keys.right - keys.left;
+	var _dir_y = keys.down - keys.up;
 	
-	if (_dir != 0) { facing_x = _dir };
+	
+	if (_dir_x != 0) { facing_x = _dir_x };
 
 	if (!dashing) {
-		velocity.x = _dir * MOVEMENT_SPEED;
+		velocity.x = _dir_x * MOVEMENT_SPEED;
 		velocity.y = min(velocity.y + GRAVITY, MAX_FALL_SPEED);
 	}
 
@@ -48,8 +51,17 @@
 	if (dashing) {
 		dash_timer -= delta_time / 1000000;
 		
-		var _vel_y = velocity.y == 0 ? 1 : velocity.y;
-		var _vel_x = velocity.x == 0 ? 1 : velocity.x;
+		var _vel_y = noone;
+		var _vel_x = noone;
+		
+		if (_dir_y != 0) {
+			_vel_y = velocity.y == 0 ? 1 : velocity.y;
+		}
+		
+		if (_dir_x != 0) {
+			_vel_x = velocity.x == 0 ? 1 : velocity.x;
+		}
+		
 		var _inst_y = instance_place(x, y + _vel_y, oBlock);
 		var _inst_x = instance_place(x + _vel_x, y, oBlock);
 		

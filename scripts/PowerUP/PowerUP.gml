@@ -26,8 +26,8 @@ function PowerUP() constructor {
 		_player.dash_timer = _player.dash_duration;
 		_player.recharge = _player.dash_recharge;
 		
-		var _dx = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-		var _dy = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+		var _dx = _player.keys.right - _player.keys.left;
+		var _dy = _player.keys.down - _player.keys.up;
 		
 		if (_dx == 0 && _dy == 0) {
 			_dx = _player.facing_x;

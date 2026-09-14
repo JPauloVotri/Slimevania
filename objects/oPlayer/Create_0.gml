@@ -11,6 +11,7 @@ MOVEMENT_SPEED = 2;
         left: false,
         right: false,
         down: false,
+		up: false,
         jump: false,
 		usePower: false,
     };
