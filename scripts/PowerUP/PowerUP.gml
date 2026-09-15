@@ -19,3 +19,4 @@ function PowerUP() constructor {
             _player.activePower = _power.name;
         };
     };
+}
