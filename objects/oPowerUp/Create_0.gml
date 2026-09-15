@@ -1,7 +1,7 @@
-if (!variable_global_exists("powerups")) {
-    global.powerups = [];
+if (!variable_global_exists("powerUps")) {
+    global.powerUps = [];
 }
 
-if (array_contains(global.powerups, power_id)) {
-	instance_destroy();
+if (array_contains(global.powerUps, powerId)) {
+    instance_destroy();
 }

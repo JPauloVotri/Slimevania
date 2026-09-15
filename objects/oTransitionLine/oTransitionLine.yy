@@ -26,7 +26,7 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v2","%Name":"transition_dir","filters":[],"listItems":[],"multiselect":false,"name":"transition_dir","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"\"right\"","varType":2,},
+    {"$GMObjectProperty":"v2","%Name":"transitionDir","filters":[],"listItems":[],"multiselect":false,"name":"transitionDir","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"\"right\"","varType":2,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

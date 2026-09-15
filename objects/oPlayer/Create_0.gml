@@ -6,23 +6,18 @@ JUMP_SPEED = 5;
 MAX_FALL_SPEED = 4;
 MOVEMENT_SPEED = 2;
 
-facing_x = 0;
+facing = 0;
 keys = { };
 
 #region Powerups
     powersList = [];
     activePower = "";
     recharge = 0;
-    hitWallY = false;
 
     // PowerDash
-    dashing = false;
-    dash_timer = 0;
-    dash_duration = 0.2;
-    dash_speed = 8;
-    dash_dir_x = 0;
-    dash_dir_y = 0;
-    dash_recharge = 2;
+    DASH_DURATION = .2;
+    DASH_SPEED = 8;
+    DASH_RECHARGE = 2;
 #endregion
 
 #region Máquina de estados
@@ -148,8 +143,7 @@ keys = { };
          * @self Asset.GMObject.oPlayer
          */
         var dashing_create = function() {
-            dash_timer = dash_duration;
-            recharge = dash_recharge;
+            recharge = DASH_RECHARGE;
 
             var _direction = new Vector2(
                 keys.right - keys.left,
@@ -157,12 +151,12 @@ keys = { };
             );
 
             if (_direction.magnitude() == 0) {
-                _direction.x = facing_x;
+                _direction.x = facing;
             }
 
             var _lenght = _direction.magnitude();
 
-            velocity.rewriteRW(_direction.normalized().scaleRW(dash_speed));
+            velocity.rewriteRW(_direction.normalized().scaleRW(DASH_SPEED));
 
             handle_dash_cracked_block_collision();
         }
@@ -171,7 +165,7 @@ keys = { };
          * @self Asset.GMObject.oPlayer
          */
         var dashing_update = function() {
-            var _timeout = stateMachine.time / room_speed > dash_duration;
+            var _timeout = stateMachine.time / game_get_speed(gamespeed_fps) > DASH_DURATION;
 
             handle_dash_cracked_block_collision();
 
@@ -186,7 +180,7 @@ keys = { };
         var dashing_destroy = function() {
             velocity.rewrite(
                 min(abs(velocity.x), MOVEMENT_SPEED) * sign(velocity.x),
-                clamp(velocity.y, -JUMP_SPEED / 2, MAX_FALL_SPEED),
+                clamp(velocity.y, -JUMP_SPEED / 2, MAX_FALL_SPEED)
             )
         }
     #endregion
@@ -223,7 +217,7 @@ keys = { };
         );
 
         if (_crackedBlock) {
-            array_push(global.blocos_quebrados, _crackedBlock.id.block_id);
+            array_push(global.brokenBlocks, _crackedBlock.id.block_id);
             instance_destroy(_crackedBlock.id);
         }
     }

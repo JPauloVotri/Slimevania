@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"PowerUP",
+  "%Name":"scPowerUp",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"PowerUP",
+  "name":"scPowerUp",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

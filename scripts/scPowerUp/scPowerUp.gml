@@ -9,7 +9,7 @@ function PowerUP() constructor {
                 // power_dash(_player);
                 break;
         }
-    };
+    }
 
     /// @desc Atualiza o powerup usado pelo player
     /// @param {Id.Instance} _power Instância do powerup
@@ -17,6 +17,6 @@ function PowerUP() constructor {
     function set_power_up(_power, _player) {
         if (array_contains(_player.powers, _power.name)) {
             _player.activePower = _power.name;
-        };
-    };
+        }
+    }
 }

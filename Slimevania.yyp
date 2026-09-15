@@ -40,7 +40,7 @@
     {"id":{"name":"room_0_1","path":"rooms/room_0_1/room_0_1.yy",},},
     {"id":{"name":"room_1_1","path":"rooms/room_1_1/room_1_1.yy",},},
     {"id":{"name":"room_2_1","path":"rooms/room_2_1/room_2_1.yy",},},
-    {"id":{"name":"PowerUP","path":"scripts/PowerUP/PowerUP.yy",},},
+    {"id":{"name":"scPowerUp","path":"scripts/scPowerUp/scPowerUp.yy",},},
     {"id":{"name":"scRoomManager","path":"scripts/scRoomManager/scRoomManager.yy",},},
     {"id":{"name":"scState","path":"scripts/scState/scState.yy",},},
     {"id":{"name":"scStateMachine","path":"scripts/scStateMachine/scStateMachine.yy",},},

@@ -1,3 +1,3 @@
-global.blocos_quebrados = [];
-global.powerups = [];
+global.brokenBlocks = [];
+global.powerUps = [];
 global.roomManager = new RoomManager();
