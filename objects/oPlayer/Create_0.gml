@@ -103,6 +103,7 @@ keys = { };
          */
         var on_air_create = function() {
             onAirInitialXDirection = sign(velocity.x);
+            onAirDirectionChanged = false;
         }
 
         /** Atualiza o estado "ON_AIR" do jogador
@@ -130,13 +131,16 @@ keys = { };
                 return;
             }
 
-            if (_dir != 0 && _dir != onAirInitialXDirection) {
-                onAirInitialXDirection = 0;
-                velocity.x = _dir * MOVEMENT_SPEED / 2;
-            } else if (_dir == 0) {
-                onAirInitialXDirection = 0;
-                velocity.x = sign(velocity.x) * MOVEMENT_SPEED / 2;
+            if (_dir != onAirInitialXDirection) {
+                onAirDirectionChanged = true;
             }
+
+            if (_dir == 0) {
+                _dir = sign(velocity.x);
+            }
+
+            var _speedMultiplier = onAirDirectionChanged ? .5 : 1;
+            velocity.x = _dir * MOVEMENT_SPEED * _speedMultiplier;
         }
 
         /** Inicia o estado "DASHING" do jogador
