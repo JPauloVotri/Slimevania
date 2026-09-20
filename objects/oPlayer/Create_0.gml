@@ -217,8 +217,7 @@ keys = { };
         );
 
         if (_crackedBlock) {
-            array_push(global.brokenBlocks, _crackedBlock.id.block_id);
-            instance_destroy(_crackedBlock.id);
+            oGame.roomManager.destroy_instance_and_persist(_crackedBlock);
         }
     }
 #endregion

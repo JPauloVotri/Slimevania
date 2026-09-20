@@ -1,5 +1,7 @@
 /// Gerencia a navegação entre salas.
 function RoomManager() constructor {
+    destroyedInstances = {};
+
     /* TODO: Avaliar necessidade
     var _matrix = [];
 
@@ -111,5 +113,50 @@ function RoomManager() constructor {
             _parse_coord(_parts[_last - 1]),
             _parse_coord(_parts[_last])
         );
+    }
+
+    /**
+     * Registra uma instância como destruída e a remove.
+     * @param {Id.Instance} _instance Instância a ser destruida e registrada.
+     */
+    destroy_instance_and_persist = function(_instance) {
+        var _roomName = room_get_name(room);
+
+        if (!variable_struct_exists(destroyedInstances, _roomName)) {
+            destroyedInstances[$ _roomName] = [];
+        }
+
+        array_push(
+            destroyedInstances[$ _roomName],
+            [_instance.object_index, _instance.x, _instance.y]
+        );
+
+        instance_destroy(_instance, false);
+    }
+
+    /// Restaura o estado da sala atual, destruindo instâncias já destruídas.
+    restore_room = function() {
+        var _roomName = room_get_name(room);
+
+        if (!variable_struct_exists(destroyedInstances, _roomName)) {
+            return;
+        }
+
+        var _list = destroyedInstances[$ _roomName];
+
+        for (var _i = 0; _i < array_length(_list); _i++) {
+            var _entry = _list[_i];
+
+            var _object = _entry[0];
+            var _x = _entry[1];
+            var _y = _entry[2];
+
+            /// @self Asset.GMObject
+            with (_object) {
+                if (x == _x && y == _y) {
+                    instance_destroy();
+                }
+            }
+        }
     }
 }
