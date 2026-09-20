@@ -6,8 +6,8 @@
   "name":"oCrackedBlock",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"blocks",
+    "path":"folders/Objects/blocks.yy",
   },
   "parentObjectId":{
     "name":"oBlock",
