@@ -207,8 +207,8 @@ keys = { };
         .add_state(dashingState);
 #endregion
 
-#region Funções de Dash
-    /// Verifica se o dash do jogador colidiu com um bloco quebrável.
+#region Funções do player
+    /// Destrói blocos quebráveis atingidos durante o dash.
     function handle_dash_cracked_block_collision() {
         var _crackedBlock = instance_place(
             x + velocity.x,
@@ -219,5 +219,22 @@ keys = { };
         if (_crackedBlock) {
             oGame.roomManager.destroy_instance_and_persist(_crackedBlock);
         }
+    }
+
+    /// Coleta o power-up encontrado pelo jogador.
+    function handle_power_up_pickup() {
+        /// @type {Id.Instance.oPowerUp}
+        var _powerUp = instance_place(x, y, oPowerUp);
+
+        if (!_powerUp) {
+            return;
+        }
+
+        if (!array_contains(powersList, _powerUp.name)) {
+            array_push(powersList, _powerUp.name);
+            activePower = _powerUp.name;
+        }
+
+        oGame.roomManager.destroy_instance_and_persist(_powerUp);
     }
 #endregion
