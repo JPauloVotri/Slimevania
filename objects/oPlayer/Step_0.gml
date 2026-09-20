@@ -21,6 +21,7 @@ if (recharge > 0) {
         recharge = 0;
     }
 }
+handle_power_up_pickup();
 
 #region Máquina de estados e movimento
     stateMachine.update();

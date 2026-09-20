@@ -1,13 +1,12 @@
 {
   "$GMObject":"",
   "%Name":"oPowerDash",
-  "eventList":[],
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
   "name":"oPowerDash",
-  "overriddenProperties":[
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"oPowerUp","path":"objects/oPowerUp/oPowerUp.yy",},"propertyId":{"name":"name","path":"objects/oPowerUp/oPowerUp.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"\"powerDash\"",},
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"oPowerUp","path":"objects/oPowerUp/oPowerUp.yy",},"propertyId":{"name":"powerId","path":"objects/oPowerUp/oPowerUp.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"\"powerDash\"",},
-  ],
+  "overriddenProperties":[],
   "parent":{
     "name":"Objects",
     "path":"folders/Objects.yy",

@@ -1,4 +1,8 @@
+/// Gerencia a navegação entre salas.
 function RoomManager() constructor {
+    destroyedInstances = {};
+
+    /* TODO: Avaliar necessidade
     var _matrix = [];
 
     for (var _i = real(room_first); _i <= real(room_last); _i++) {
@@ -57,30 +61,102 @@ function RoomManager() constructor {
     }
 
     global.matrix = _finalMatrix;
+    */
 
-    /// Faz a troca da room
-    function change_room(_actual_room, _dx, _dy) {
-        var _roomName = room_get_name(_actual_room);
-        var _roomMatrix = get_room_matrix(_roomName);
+    /**
+     * Muda para a sala na direção informada.
+     * @param {Struct.Vector2} _transitionDir Direção da transição.
+     */
+    change_room = function(_transitionDir) {
+        if (_transitionDir.magnitude() == 0) return;
 
-        _roomMatrix[0] += _dy;
-        _roomMatrix[1] += _dx;
+        var _roomPos = get_room_position().addRW(_transitionDir);
+        var _roomName = "room_" + string(_roomPos.x) + "_" + string(_roomPos.y);
+        _roomName = string_replace_all(_roomName, "-", "n");
 
-        var _newRoomName = "room_" + string(_roomMatrix[0]) + "_" + string(_roomMatrix[1]);
-        var _room = asset_get_index(_newRoomName);
+        room_goto(asset_get_index(_roomName));
 
-        room_goto(_room);
+        if (instance_exists(oPlayer)) {
+            oPlayer.x -= _transitionDir.x * room_width;
+            oPlayer.y -= _transitionDir.y * room_height;
+        }
     }
 
-    function get_room_matrix(_room_name) {
-        var _stringMatrix = string_split(_room_name, "_", true, 1)[1];
-        var _matrix = array_map(
-            string_split(_stringMatrix, "_"),
-            function(_item) {
-                return real(_item);
+    /**
+     * Retorna as coordenadas da sala atual.
+     * @returns {Struct.Vector2} A posição da sala atual.
+     */
+    get_room_position = function () {
+        /**
+         * Converte uma coordenada textual em número.
+         * @param {String} _str Coordenada em formato textual.
+         * @return {Real} Coordenada em formato numérico.
+         */
+        var _parse_coord = function(_str) {
+            if (string_starts_with(_str, "n")) {
+                return -real(string_delete(_str, 1, 1));
             }
+
+            return real(_str);
+        }
+
+        var _roomName = room_get_name(room);
+        var _parts = string_split(_roomName, "_");
+        var _last = array_length(_parts) - 1;
+
+        if (array_length(_parts) < 3) {
+            show_debug_message("Nome de sala inválido: " + _roomName);
+            return new Vector2(0, 0);
+        }
+
+        return new Vector2(
+            _parse_coord(_parts[_last - 1]),
+            _parse_coord(_parts[_last])
+        );
+    }
+
+    /**
+     * Registra uma instância como destruída e a remove.
+     * @param {Id.Instance} _instance Instância a ser destruida e registrada.
+     */
+    destroy_instance_and_persist = function(_instance) {
+        var _roomName = room_get_name(room);
+
+        if (!variable_struct_exists(destroyedInstances, _roomName)) {
+            destroyedInstances[$ _roomName] = [];
+        }
+
+        array_push(
+            destroyedInstances[$ _roomName],
+            [_instance.object_index, _instance.x, _instance.y]
         );
 
-        return _matrix;
+        instance_destroy(_instance, false);
+    }
+
+    /// Restaura o estado da sala atual, destruindo instâncias já destruídas.
+    restore_room = function() {
+        var _roomName = room_get_name(room);
+
+        if (!variable_struct_exists(destroyedInstances, _roomName)) {
+            return;
+        }
+
+        var _list = destroyedInstances[$ _roomName];
+
+        for (var _i = 0; _i < array_length(_list); _i++) {
+            var _entry = _list[_i];
+
+            var _object = _entry[0];
+            var _x = _entry[1];
+            var _y = _entry[2];
+
+            /// @self Asset.GMObject
+            with (_object) {
+                if (x == _x && y == _y) {
+                    instance_destroy();
+                }
+            }
+        }
     }
 }

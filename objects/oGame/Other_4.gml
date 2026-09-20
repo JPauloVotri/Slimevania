@@ -1,0 +1,1 @@
+roomManager.restore_room();
