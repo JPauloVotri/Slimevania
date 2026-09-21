@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scMapDraw",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scMapDraw",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

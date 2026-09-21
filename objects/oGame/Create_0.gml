@@ -3,7 +3,10 @@ if (instance_number(oGame) > 1) {
     return;
 }
 
+var _minimapPosition = new Vector2(8, 8);
+
 roomManager = new RoomManager();
+miniMapDraw = new MapDraw(roomManager.map, _minimapPosition, 5, 5);
 
 /// Retorna a direção de saída do player da sala.
 /// @param {Real} _x Posição X do player.
