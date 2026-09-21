@@ -36,6 +36,7 @@ keys = { };
         DASHING,
 		CLIMBING,
 		LEDGE,
+		CUTSCENE,
     }
 
     stateMachine = new StateMachine();
@@ -296,6 +297,22 @@ keys = { };
 		    velocity.rewrite(0, 0);
 		    velocityReminder.rewrite(0, 0);
 		}
+		
+		/** Atualiza o estado "CUTSCENE" do jogador
+		 * @self Asset.GMObject.oPlayer
+		 */
+		var cutscene_update = function() {
+		    velocity.x = 0;
+		    velocityReminder.x = 0;
+
+		    // Se pegou o trigger no ar, deixa cair até o chão antes de ficar parado
+		    if (on_solid() && velocity.y >= 0) {
+		        velocity.y = 0;
+		        velocityReminder.y = 0;
+		    } else {
+		        velocity.y = min(velocity.y + GRAVITY, MAX_FALL_SPEED);
+		    }
+		};
     #endregion
 
     var idleState = new State(STATES.IDLE)
@@ -321,6 +338,9 @@ keys = { };
 		.set_create(ledge_create)
 		.set_update(ledge_update)
 		.set_destroy(ledge_destroy);
+		
+	var cutsceneState = new State(STATES.CUTSCENE)
+		.set_update(cutscene_update);
 
     stateMachine
         .add_state(idleState)
@@ -328,7 +348,8 @@ keys = { };
         .add_state(onAirState)
         .add_state(dashingState)
 		.add_state(climbingState)
-		.add_state(ledgeState);
+		.add_state(ledgeState)
+		.add_state(cutsceneState);
 #endregion
 
 #region Funções do player
@@ -378,9 +399,7 @@ keys = { };
 
 	    return undefined;
 	}
-#endregion
-
-#region Utilitários
+	
 	/// Checa se há colisão com um bloco escalável, retornando o lado da colisão
 	function get_roughcast_block_collision_side() {
 		if (place_meeting(x + 1, y, oRoughcastBlock)) return 1;
@@ -401,5 +420,20 @@ keys = { };
 		
 		stateMachine.change_state(STATES.CLIMBING);
 		return true;
+	}
+	
+	/// Congela o jogador para uma cena.
+	function start_cutscene() {
+	    stateMachine.change_state(STATES.CUTSCENE);
+	}
+
+	/// Devolve o controle ao jogador.
+	function end_cutscene() {
+	    stateMachine.change_state(STATES.IDLE);
+	}
+
+	/// @returns {Bool}
+	function in_cutscene() {
+	    return stateMachine.state.name == STATES.CUTSCENE;
 	}
 #endregion
