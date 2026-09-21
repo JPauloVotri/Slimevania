@@ -161,6 +161,28 @@ stateMachine = new StateMachine();
          */
         var dashing_update = function() {
             var _timeout = stateMachine.time / game_get_speed(gamespeed_fps) > DASH_DURATION;
+			var _mod = stateMachine.time mod 2;
+			
+			if (_mod == 0) {
+				var _trace = instance_create_layer(x, y, "Game", oTrace);
+				
+				_trace.sprite_index = sprite_index;
+				_trace.image_index = image_index;
+				_trace.image_xscale = image_xscale;
+			    _trace.image_yscale = image_yscale;
+			    _trace.image_angle  = image_angle;
+				_trace.image_speed = 0;
+				_trace.image_alpha = .6;
+				_trace.depth = depth + 1;
+				
+				_trace.on_step = function(_inst) {
+					_inst.image_alpha -= .06;
+					
+					if (_inst.image_alpha <= 0) {
+						instance_destroy(_inst, false);
+					}
+				}
+			}
 
             handle_dash_cracked_block_collision();
 
