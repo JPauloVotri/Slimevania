@@ -12,13 +12,11 @@ function Map() constructor {
 
     /// Retorna a tile armazenada em uma posição do mapa.
     /// @param {Struct.Vector2} _position A posição da tile no mapa.
-    /// @returns {Struct.MapTile|Undefined} A tile do mapa.
+    /// @returns {Struct.MapTile} A tile do mapa.
     get_tile = function(_position) {
         var _index = string(_position);
 
-        if (!variable_struct_exists(tiles, _index)) {
-            return;
-        }
+        if (!variable_struct_exists(tiles, _index)) return new MapTile();
 
         return tiles[$ _index];
     }

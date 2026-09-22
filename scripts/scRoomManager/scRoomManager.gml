@@ -111,7 +111,7 @@ function RoomManager() constructor {
         for (var _room = real(room_first); _room <= real(room_last); _room++) {
             var _position = get_room_position(_room);
             var _isHidden = array_contains(hiddenRooms, _room);
-            var _tile = new MapTile(false, _isHidden);
+            var _tile = new MapTile(false, _isHidden, MAP_ZONE.BLUE);
 
             map.add_tile(_position, _tile);
         }

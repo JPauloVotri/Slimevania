@@ -52,17 +52,6 @@ function MapDraw(_map, _position, _width, _height) constructor {
         currentAlpha = lerp(currentAlpha, _target, alpha.speed);
     }
 
-    /// Retorna o índice do tile visual correspondente ao tile do mapa.
-    /// @param {Struct.MapTile|Undefined} _tile A tile do mapa, se existir.
-    /// @returns {Real} O índice do tile visual.
-    get_tile_data = function(_tile) {
-        if (is_undefined(_tile)) return 1;
-        if (_tile.visited) return 3;
-        if (!_tile.hidden) return 2;
-
-        return 1;
-    }
-
     /// Desenha o mapa e marca a sala atual com o indicador do jogador.
     /// @param {Struct.Vector2} _currentRoomPosition A posição da sala atual.
     draw = function(_currentRoomPosition) {
@@ -96,9 +85,10 @@ function MapDraw(_map, _position, _width, _height) constructor {
                     .addRW(_currentRoomPosition)
                     .subtractRW(_offset);
                 var _tile = map.get_tile(_tilePos);
-                var _tileData = get_tile_data(_tile);
+                var _tilesetIndex = _tile.get_tileset_index();
 
-                draw_tile(tsMapTiles, _tileData, 0, _guiPos.x, _guiPos.y);
+                draw_set_color(_tile.get_tint());
+                draw_tile(tsMapTiles, _tilesetIndex, 0, _guiPos.x, _guiPos.y);
 
                 if (_tilePos.equalsRW(_currentRoomPosition)) {
                     draw_sprite(sMapPlayer, _frame, _guiPos.x, _guiPos.y);
