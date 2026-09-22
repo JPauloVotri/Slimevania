@@ -2,7 +2,7 @@
   "$GMSprite":"v2",
   "%Name":"sMapTiles",
   "bboxMode":0,
-  "bbox_bottom":39,
+  "bbox_bottom":44,
   "bbox_left":0,
   "bbox_right":47,
   "bbox_top":0,
