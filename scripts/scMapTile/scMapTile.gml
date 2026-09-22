@@ -25,7 +25,7 @@ function MapTile(
     zone = _zone;
 
     /// Retorna índice do tile na tileset de acordo à zona e ocultação da sala.
-    /// @returns {Enum.Enum.MAP_ZONE} O índice do tile na tileset.
+    /// @returns {Enum.MAP_ZONE} O índice do tile na tileset.
     get_tileset_index = function() {
         if (hidden && !visited) return MAP_ZONE.EMPTY;
 
