@@ -53,11 +53,16 @@ function MapDraw(_map, _position, _width, _height) constructor {
     }
 
     /// Desenha o mapa e marca a sala atual com o indicador do jogador.
-    /// @param {Struct.Vector2} _currentRoomPosition A posição da sala atual.
-    draw = function(_currentRoomPosition) {
+    /// @param {Struct.Vector2} _currentRoomPosition Posição da sala atual.
+    /// @param {Struct.Vector2|Undefined} _mapCenter Posição central do mapa.
+    draw = function(_currentRoomPosition, _mapCenter) {
         var _initialAlpha = draw_get_alpha();
         var _initialColor = draw_get_color();
         var _frame = (current_time % 1000) > 500;
+
+        if (is_undefined(_mapCenter)) {
+            _mapCenter = _currentRoomPosition;
+        }
 
         draw_set_color(backgroundColor);
         draw_set_alpha(currentAlpha);
@@ -82,7 +87,7 @@ function MapDraw(_map, _position, _width, _height) constructor {
                     .componentMultiplyRW(tileSize)
                     .addRW(position);
                 var _tilePos = _position.copy()
-                    .addRW(_currentRoomPosition)
+                    .addRW(_mapCenter)
                     .subtractRW(_offset);
                 var _tile = map.get_tile(_tilePos);
                 var _tilesetIndex = _tile.get_tileset_index();
@@ -98,5 +103,15 @@ function MapDraw(_map, _position, _width, _height) constructor {
 
         draw_set_color(_initialColor);
         draw_set_alpha(_initialAlpha);
+    }
+
+    /// Limita a posição central do mapa aos limites válidos do mapa.
+    /// @param {Struct.Vector2} _center A posição central a ser ajustada.
+    /// @returns {Struct.Vector2} A posição limitada dentro dos limites do mapa.
+    clamp_center = function(_center) {
+        return new Vector2(
+            clamp(_center.x, map.limits.left, map.limits.right),
+            clamp(_center.y, map.limits.top, map.limits.bottom)
+        )
     }
 }
