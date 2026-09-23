@@ -5,7 +5,7 @@ function PowerUP() constructor {
     function use_power_up(_player) {
         switch (_player.activePower) {
             case "powerDash":
-                _player.stateMachine.change_state(STATES.DASHING);
+                _player.stateMachine.change_state(PLAYER_STATES.DASHING);
                 break;
         }
     }

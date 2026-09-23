@@ -39,7 +39,7 @@ keys = { };
             if (set_climbing_state()) return;
 
             if (!on_solid()) {
-                stateMachine.change_state(STATES.ON_AIR);
+                stateMachine.change_state(PLAYER_STATES.ON_AIR);
                 return;
             }
 
@@ -52,7 +52,7 @@ keys = { };
             var _dir = keys.right - keys.left;
 
             if (abs(_dir)) {
-                stateMachine.change_state(STATES.WALKING);
+                stateMachine.change_state(PLAYER_STATES.WALKING);
                 return;
             }
 
@@ -75,7 +75,7 @@ keys = { };
             if (set_climbing_state()) return;
 
             if (!on_solid()) {
-                stateMachine.change_state(STATES.ON_AIR);
+                stateMachine.change_state(PLAYER_STATES.ON_AIR);
                 return;
             }
 
@@ -88,7 +88,7 @@ keys = { };
             }
 
             if (!abs(_dir)) {
-                stateMachine.change_state(STATES.IDLE);
+                stateMachine.change_state(PLAYER_STATES.IDLE);
                 return;
             }
 
@@ -121,7 +121,7 @@ keys = { };
 
             if (on_solid() and velocity.y > 0) {
                 collide_y();
-                stateMachine.change_state(STATES.IDLE);
+                stateMachine.change_state(PLAYER_STATES.IDLE);
                 return;
             }
 
@@ -203,7 +203,7 @@ keys = { };
             handle_dash_cracked_block_collision();
 
             if (_timeout || velocity.magnitude() <= 0) {
-                stateMachine.change_state(STATES.IDLE);
+                stateMachine.change_state(PLAYER_STATES.IDLE);
             }
         }
 
@@ -237,24 +237,24 @@ keys = { };
 
                     if (_target != undefined) {
                         ledgeTarget = _target;   // define ANTES de trocar de estado
-                        stateMachine.change_state(STATES.LEDGE);
+                        stateMachine.change_state(PLAYER_STATES.LEDGE);
                         return;
                     }
                 }
 
-                stateMachine.change_state(STATES.ON_AIR);
+                stateMachine.change_state(PLAYER_STATES.ON_AIR);
                 return;
             }
 
             if (on_solid() && !keys.up) {
-                stateMachine.change_state(STATES.IDLE);
+                stateMachine.change_state(PLAYER_STATES.IDLE);
                 return;
             }
 
             var _dir = keys.right - keys.left;
 
             if (_dir == -climbSide) {
-                stateMachine.change_state(STATES.ON_AIR);
+                stateMachine.change_state(PLAYER_STATES.ON_AIR);
                 return;
             }
 
@@ -297,7 +297,7 @@ keys = { };
             y = round(lerp(ledgeStart.y, ledgeTarget.y, _ty));
 
             if (_t >= 1) {
-                stateMachine.change_state(STATES.IDLE);
+                stateMachine.change_state(PLAYER_STATES.IDLE);
             }
         }
 
@@ -326,31 +326,31 @@ keys = { };
         };
     #endregion
 
-    var idleState = new State(STATES.IDLE)
+    var idleState = new State(PLAYER_STATES.IDLE)
         .set_update(idle_update);
 
-    var walkingState = new State(STATES.WALKING)
+    var walkingState = new State(PLAYER_STATES.WALKING)
         .set_update(walking_update);
 
-    var onAirState = new State(STATES.ON_AIR)
+    var onAirState = new State(PLAYER_STATES.ON_AIR)
         .set_create(on_air_create)
         .set_update(on_air_update);
 
-    var dashingState = new State(STATES.DASHING)
+    var dashingState = new State(PLAYER_STATES.DASHING)
         .set_create(dashing_create)
         .set_update(dashing_update)
         .set_destroy(dashing_destroy);
 
-    var climbingState = new State(STATES.CLIMBING)
+    var climbingState = new State(PLAYER_STATES.CLIMBING)
         .set_create(climbing_create)
         .set_update(climbing_update);
 
-    var ledgeState = new State(STATES.LEDGE)
+    var ledgeState = new State(PLAYER_STATES.LEDGE)
         .set_create(ledge_create)
         .set_update(ledge_update)
         .set_destroy(ledge_destroy);
 
-    var cutsceneState = new State(STATES.CUTSCENE)
+    var cutsceneState = new State(PLAYER_STATES.CUTSCENE)
         .set_update(cutscene_update);
 
     stateMachine
@@ -425,23 +425,23 @@ keys = { };
 
         if (on_solid() && !keys.up) return false;
 
-        stateMachine.change_state(STATES.CLIMBING);
+        stateMachine.change_state(PLAYER_STATES.CLIMBING);
         return true;
     }
 
     /// Congela o jogador para uma cena.
     function start_cutscene() {
-        stateMachine.change_state(STATES.CUTSCENE);
+        stateMachine.change_state(PLAYER_STATES.CUTSCENE);
     }
 
     /// Devolve o controle ao jogador.
     function end_cutscene() {
-        stateMachine.change_state(STATES.IDLE);
+        stateMachine.change_state(PLAYER_STATES.IDLE);
     }
 
     /// Retorna se o jogador está no meio de uma cutscene.
     /// @returns {Bool}
     function in_cutscene() {
-        return stateMachine.state.name == STATES.CUTSCENE;
+        return stateMachine.state.name == PLAYER_STATES.CUTSCENE;
     }
 #endregion
