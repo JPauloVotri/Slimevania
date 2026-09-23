@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scState",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"States",
+    "path":"folders/Scripts/States.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

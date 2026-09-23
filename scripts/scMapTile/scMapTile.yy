@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scMapTile",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Map",
+    "path":"folders/Scripts/Map.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

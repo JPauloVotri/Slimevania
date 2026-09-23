@@ -8,8 +8,8 @@
   "name":"oPowerDash",
   "overriddenProperties":[],
   "parent":{
-    "name":"powerups",
-    "path":"folders/Objects/powerups.yy",
+    "name":"PowerUps",
+    "path":"folders/Objects/PowerUps.yy",
   },
   "parentObjectId":{
     "name":"oPowerUp",

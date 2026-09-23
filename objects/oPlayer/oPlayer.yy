@@ -9,8 +9,8 @@
   "name":"oPlayer",
   "overriddenProperties":[],
   "parent":{
-    "name":"player",
-    "path":"folders/Objects/player.yy",
+    "name":"Player",
+    "path":"folders/Objects/Actors/Player.yy",
   },
   "parentObjectId":{
     "name":"oActor",
