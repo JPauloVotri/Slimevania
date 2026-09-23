@@ -177,7 +177,7 @@ keys = { };
          */
         var dashing_update = function() {
             var _timeout = stateMachine.time / game_get_speed(gamespeed_fps) > DASH_DURATION;
-            var _mod = stateMachine.time mod 2;
+            var _mod = stateMachine.time % 2;
 
             if (_mod == 0) {
                 var _trace = instance_create_layer(x, y, "Game", oTrace);
@@ -224,8 +224,7 @@ keys = { };
             climbSide = get_roughcast_block_collision_side();
             facing = climbSide;
             velocity.rewrite(0, SLIDE_SPEED);
-            velocityReminder.x = 0;
-            velocityReminder.y = 0;
+            velocityReminder.rewrite(0, 0);
         }
 
         /** Atualiza o estado "CLIMBING" do jogador
@@ -252,7 +251,7 @@ keys = { };
                 return;
             }
 
-            var _dir = -keys.left + keys.right;
+            var _dir = keys.right - keys.left;
 
             if (_dir == -climbSide) {
                 stateMachine.change_state(STATES.ON_AIR);
@@ -383,9 +382,7 @@ keys = { };
         /// @type {Id.Instance.oPowerUp}
         var _powerUp = instance_place(x, y, oPowerUp);
 
-        if (!_powerUp) {
-            return;
-        }
+        if (!_powerUp) return;
 
         if (!array_contains(powersList, _powerUp.name)) {
             array_push(powersList, _powerUp.name);
@@ -396,7 +393,7 @@ keys = { };
     }
 
     /// Procura um ponto onde o jogador cabe em cima da borda.
-    /// @returns {Struct.Vector2, Undefined}
+    /// @returns {Struct.Vector2|Undefined}
     function find_ledge_target() {
         var _tx = x + climbSide * LEDGE_REACH;
 
@@ -408,23 +405,21 @@ keys = { };
                 return new Vector2(_tx, _ty);
             }
         }
-
-        return undefined;
     }
 
-    /// Checa se há colisão com um bloco escalável, retornando o lado da colisão
+    /// Checa se há colisão com um bloco escalável, retornando o lado da colisão.
     function get_roughcast_block_collision_side() {
         if (place_meeting(x + 1, y, oRoughcastBlock)) return 1;
         if (place_meeting(x - 1, y, oRoughcastBlock)) return -1;
         return 0;
     }
 
-    /// Entra em CLIMBING se estiver colidindo com um bloco escalável
+    /// Entra em CLIMBING se estiver colidindo com um bloco escalável.
     function set_climbing_state() {
         var _side = get_roughcast_block_collision_side();
         if (_side == 0) return false;
 
-        var _dir = keys.right - keys.left
+        var _dir = keys.right - keys.left;
 
         if (_dir == -_side) return false;
 
@@ -444,6 +439,7 @@ keys = { };
         stateMachine.change_state(STATES.IDLE);
     }
 
+    /// Retorna se o jogador está no meio de uma cutscene.
     /// @returns {Bool}
     function in_cutscene() {
         return stateMachine.state.name == STATES.CUTSCENE;
