@@ -10,6 +10,17 @@
     keys.usePower = keyboard_check_pressed(vk_shift);
 #endregion
 
+if (in_cutscene()) {
+    keys.left = 0;
+    keys.right = 0;
+    keys.up = 0;
+    keys.down = 0;
+    keys.descend = 0;
+    keys.jump = 0;
+    keys.jumpRelease = 0;
+    keys.usePower = 0;
+}
+
 // TODO: Encontrar um lugar melhor para isso
 var _dir = keys.right - keys.left;
 if (_dir != 0) {
