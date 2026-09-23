@@ -279,9 +279,30 @@ function Vector2(_x, _y) constructor {
         return self;
     }
 
+    /// Verifica se dois vetores possuem os mesmos componentes.
+    /// @param {Struct.Vector2} _a O primeiro vetor.
+    /// @param {Struct.Vector2} _b O segundo vetor.
+    /// @returns {Bool} Se os componentes dos vetores são iguais.
+    static equals = function(_a, _b) {
+        return _a.x == _b.x && _a.y == _b.y;
+    }
+
+    /// Verifica se este vetor possui os mesmos componentes que outro vetor.
+    /// @param {Struct.Vector2} _a O vetor comparado com este vetor.
+    /// @returns {Bool} Se os componentes dos vetores são iguais.
+    equalsRW = function(_a) {
+        return self.equals(self, _a);
+    }
+
     /// @desc Cria uma cópia deste vetor em vez de uma referência ao mesmo objeto.
     /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     copy = function () {
         return new Vector2(x, y);
+    }
+
+    /// Retorna os componentes deste vetor como texto, separados por vírgula.
+    /// @returns {String} Os componentes x e y formatados como "x,y".
+    toString = function() {
+        return string(x) + "," + string(y);
     }
 }
