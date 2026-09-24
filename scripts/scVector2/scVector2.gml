@@ -251,12 +251,12 @@ function Vector2(_x, _y) constructor {
     }
 
     /// @desc Rotaciona este vetor em _r radianos e sobrescreve o valor atual.
-    ///       Não retorna nenhum valor.
     /// @param {real} _r Quantidade de rotação, em radianos.
     /// @returns {Struct.Vector2} Uma cópia do vetor atual.
     static rotateRW = function (_r) {
-        x = x * cos(_r) - y * sin(_r);
-        y = x * sin(_r) + y * cos(_r);
+        var _copy = copy();
+        x = _copy.x * cos(_r) - _copy.y * sin(_r);
+        y = _copy.x * sin(_r) + _copy.y * cos(_r);
         return self;
     }
 
