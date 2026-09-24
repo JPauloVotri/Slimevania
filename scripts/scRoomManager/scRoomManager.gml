@@ -5,6 +5,25 @@ function RoomManager() constructor {
     hiddenRooms = [
         room_0_1,
     ]
+    hasNeighbor = {
+        left: false,
+        right: false,
+        top: false,
+        bottom: false,
+    }
+
+    /// Busca a sala correspondente à posição de coordenadas do mapa.
+    /// @param {Struct.Vector2} _position Posição da sala no mapa, em coordenadas de sala.
+    /// @returns {Asset.GMRoom|Undefined} A sala encontrada para a posição, ou `undefined` se não existir.
+    get_room_on_position = function(_position) {
+        var _roomName = "room_" + string(_position.x) + "_" + string(_position.y);
+        _roomName = string_replace_all(_roomName, "-", "n");
+        var _room = asset_get_index(_roomName);
+
+        if (_room < 0) return;
+
+        return _room;
+    }
 
     /// Muda para a sala na direção informada.
     /// @param {Struct.Vector2} _transitionDir Direção da transição.
@@ -12,10 +31,14 @@ function RoomManager() constructor {
         if (_transitionDir.magnitude() == 0) return;
 
         var _roomPos = get_current_room_position().addRW(_transitionDir);
-        var _roomName = "room_" + string(_roomPos.x) + "_" + string(_roomPos.y);
-        _roomName = string_replace_all(_roomName, "-", "n");
+        var _room = get_room_on_position(_roomPos);
 
-        room_goto(asset_get_index(_roomName));
+        if (is_undefined(_room)) {
+            show_debug_message("Não existe sala na posição " + string(_roomPos));
+            return;
+        }
+
+        room_goto(_room);
 
         if (instance_exists(oPlayer)) {
             oPlayer.x -= _transitionDir.x * room_width;
@@ -103,6 +126,24 @@ function RoomManager() constructor {
                     instance_destroy();
                 }
             }
+        }
+    }
+
+    /// Atualiza os flags de vizinhança da sala atual.
+    update_neighbor_flags = function() {
+        var _roomPos = get_current_room_position();
+        var _dir = new Vector2(1, 0);
+        var _keys = ["right", "bottom", "left", "top"];
+        var _halfPi = pi / 2;
+
+        for (var _i = 0; _i < 4; _i++) {
+            var _neighborPosition = _roomPos.copy().addRW(_dir);
+            var _room = get_room_on_position(_neighborPosition);
+
+            hasNeighbor[$ _keys[_i]] = !is_undefined(_room);
+
+            // Rotaciona 90° e arredonda para evitar erros de ponto flutuante.
+            _dir.rotateRW(_halfPi).rndRW();
         }
     }
 

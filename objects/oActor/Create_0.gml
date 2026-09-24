@@ -21,7 +21,8 @@
     function on_solid() {
         return place_meeting(x, y + 1, oBlock) ||
             place_meeting(x, y + 1, oOneWayBlock) &&
-            !place_meeting(x, y, oOneWayBlock);
+            !place_meeting(x, y, oOneWayBlock) ||
+            check_room_limits_collision(0, 1);
     }
 #endregion
 
@@ -68,6 +69,11 @@
                     break;
                 }
 
+                if (check_room_limits_collision(_dir, 0)) {
+                    _x_collision_event(noone);
+                    break;
+                }
+
                 x += _dir;
                 _move.x -= _dir;
 
@@ -103,9 +109,34 @@
                     break;
                 }
 
+                if (check_room_limits_collision(0, _dir)) {
+                    _y_collision_event(noone);
+                    break;
+                }
+
                 y += _dir;
                 _move.y -= _dir;
             }
         }
+    }
+
+    /// Verifica se a próxima posição do ator ultrapassa os limites da sala atual.
+    /// Quando a sala não tem vizinho em determinada direção, a borda da room passa a
+    /// funcionar como barreira de colisão e a função retorna `true`.
+    /// @param {Real} _dx Deslocamento proposto no eixo horizontal.
+    /// @param {Real} _dy Deslocamento proposto no eixo vertical.
+    /// @returns {Bool} Se a colisão com os limites da sala ocorrer.
+    check_room_limits_collision = function(_dx, _dy) {
+        if (!instance_exists(oGame)) return false;
+        if (is_undefined(oGame.roomManager)) return false;
+
+        var _hasNeighbor = oGame.roomManager.hasNeighbor;
+
+        if (!_hasNeighbor.left && bbox_left + _dx < 0) return true;
+        if (!_hasNeighbor.right && bbox_right + _dx >= room_width) return true;
+        if (!_hasNeighbor.top && bbox_top + _dy < 0) return true;
+        if (!_hasNeighbor.bottom && bbox_bottom + _dy >= room_height) return true;
+
+        return false;
     }
 #endregion
