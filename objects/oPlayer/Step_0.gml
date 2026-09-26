@@ -1,13 +1,14 @@
 #region Inputs
-    keys.left = keyboard_check(vk_left) || keyboard_check(ord("A"));
-    keys.right = keyboard_check(vk_right) || keyboard_check(ord("D"));
-    keys.up = keyboard_check(vk_up) || keyboard_check(ord("W"));
-    keys.down = keyboard_check(vk_down) || keyboard_check(ord("S"));
-    keys.descend = keyboard_check_pressed(vk_down) ||
-            keyboard_check_pressed(ord("S"));
-    keys.jump = keyboard_check_pressed(vk_space);
-    keys.jumpRelease = keyboard_check_released(vk_space);
-    keys.usePower = keyboard_check_pressed(vk_shift);
+    var _keys = oGame.inputKeys;
+
+    keys.left = _keys.left.check();
+    keys.right = _keys.right.check();
+    keys.up = _keys.up.check();
+    keys.down = _keys.down.check();
+    keys.descend = _keys.down.check_pressed(true);
+    keys.jump = _keys.pad1.check_pressed(true);
+    keys.jumpRelease = _keys.pad1.check_released(true);
+    keys.usePower = _keys.pad3.check_pressed();
 #endregion
 
 if (in_cutscene()) {

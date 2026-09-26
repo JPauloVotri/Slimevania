@@ -62,6 +62,7 @@ keys = { };
             var _isOnOneWay = place_meeting(x, y + 1, oOneWayBlock);
 
             if (keys.jump) {
+                oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
             } else if (_isOnOneWay && keys.descend) {
                 y++;
@@ -97,6 +98,7 @@ keys = { };
             var _isOnOneWay = place_meeting(x, y + 1, oOneWayBlock);
 
             if (keys.jump) {
+                oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
             } else if (_isOnOneWay && keys.descend) {
                 y++;
@@ -126,6 +128,7 @@ keys = { };
             }
 
             if (keys.jumpRelease && velocity.y < 0) {
+                oGame.inputKeys.pad1.fully_release();
                 velocity.y /= 2;
                 velocityReminder.y = 0;
             }
