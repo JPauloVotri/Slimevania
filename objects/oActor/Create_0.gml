@@ -37,86 +37,115 @@
         _y_collision_event = function(_instance) { collide_y(); }
     ) {
         velocityReminder.addRW(_velocity);
-        var _move = velocityReminder.abs();
-        _move.flrRW();
-        _move.componentMultiplyRW(velocityReminder.sign());
 
-        // Movimento no eixo X
+        var _move = velocityReminder.abs().flrRW()
+            .componentMultiplyRW(velocityReminder.sign());
+
         if (_move.x != 0) {
-            velocityReminder.x -= _move.x;
-            var _dir = sign(_move.x);
-
-            while (_move.x != 0) {
-                var _collision_instance = instance_place(x + _dir, y, oBlock);
-
-                if (_collision_instance != noone) {
-                    _collision_instance = instance_place(x + _dir, y - 1, oBlock);
-
-                    if (_collision_instance == noone && on_solid()) {
-                        x += _dir;
-                        y--;
-                        _move.x -= _dir;
-
-                        if (abs(_move.x) >= 1) {
-                            _move.x -= _dir;
-                        } else {
-                            velocityReminder.x -= _dir;
-                        }
-
-                        continue;
-                    }
-                    _x_collision_event(_collision_instance);
-                    break;
-                }
-
-                if (check_room_limits_collision(_dir, 0)) {
-                    _x_collision_event(noone);
-                    break;
-                }
-
-                x += _dir;
-                _move.x -= _dir;
-
-                _collision_instance = instance_place(x, y + 1, oBlock);
-                if (_collision_instance == noone) {
-                    _collision_instance = instance_place(x - _dir, y + 1, oBlock);
-
-                    if (_collision_instance != noone) {
-                        y++;
-                    }
-                }
-            }
+            __move_x(_move.x, _x_collision_event);
         }
 
-        // Movimento no eixo Y
         if (_move.y != 0) {
-            velocityReminder.y -= _move.y;
-            var _dir = sign(_move.y);
+            __move_y(_move.y, _y_collision_event);
+        }
+    }
 
-            while (_move.y != 0) {
-                var _collision_instance = instance_place(x, y + _dir, oBlock);
+    /// Move o ator no eixo X, pixel a pixel, tratando colisões e step-up.
+    /// @param {Real} _amount Quantidade a mover no eixo X.
+    /// @param {Function} _on_collision Callback ao colidir.
+    __move_x = function(_amount, _on_collision) {
+        var _dir = sign(_amount);
 
-                if (_collision_instance != noone) {
-                    _y_collision_event(_collision_instance);
-                    break;
+        velocityReminder.x -= _amount;
+
+        while (_amount != 0) {
+            var _collisionInstance = instance_place(x + _dir, y, oBlock);
+
+            if (_collisionInstance != noone) {
+                if (try_step_up(_dir)) {
+                    _amount -= _dir;
+
+                    if (abs(_amount) >= 1) {
+                        _amount -= _dir;
+                    } else {
+                        velocityReminder.x -= _dir;
+                    }
+
+                    continue;
                 }
 
-                // Colisão com sólidos de apenas uma direção
-                _collision_instance = instance_place(x, y + _dir, oOneWayBlock);
-                if (_collision_instance != noone &&
-                    bbox_bottom <= _collision_instance.bbox_top) {
-                    _y_collision_event(_collision_instance);
-                    break;
-                }
-
-                if (check_room_limits_collision(0, _dir)) {
-                    _y_collision_event(noone);
-                    break;
-                }
-
-                y += _dir;
-                _move.y -= _dir;
+                _on_collision(_collisionInstance);
+                break;
             }
+
+            if (check_room_limits_collision(_dir, 0)) {
+                _on_collision(noone);
+                break;
+            }
+
+            x += _dir;
+            _amount -= _dir;
+
+            try_step_down(_dir);
+        }
+    }
+
+    /// Move o ator no eixo Y, pixel a pixel, tratando colisões e blocos unidirecionais.
+    /// @param {Real} _amount Quantidade a mover no eixo Y.
+    /// @param {Function} _on_collision Callback ao colidir.
+    __move_y = function(_amount, _on_collision) {
+        var _dir = sign(_amount);
+        velocityReminder.y -= _amount;
+
+        while (_amount != 0) {
+            var _collisionInstance = instance_place(x, y + _dir, oBlock);
+
+            if (_collisionInstance != noone) {
+                _on_collision(_collisionInstance);
+                break;
+            }
+
+            // Colisão com sólidos de apenas uma direção
+            _collisionInstance = instance_place(x, y + _dir, oOneWayBlock);
+            if (_collisionInstance != noone && bbox_bottom <= _collisionInstance.bbox_top) {
+                _on_collision(_collisionInstance);
+                break;
+            }
+
+            if (check_room_limits_collision(0, _dir)) {
+                _on_collision(noone);
+                break;
+            }
+
+            y += _dir;
+            _amount -= _dir;
+        }
+    }
+
+    /// Tenta subir um degrau quando há um bloco à frente e espaço livre acima.
+    /// @param {Real} _dir Direção do movimento.
+    /// @returns {Bool} True se conseguiu subir.
+    try_step_up = function(_dir) {
+        var _above = instance_place(x + _dir, y - 1, oBlock);
+
+        if (_above != noone) return false;
+        if (!on_solid()) return false;
+
+        x += _dir;
+        y--;
+
+        return true;
+    }
+
+    /// Tenta descer um degrau quando há espaço livre abaixo e um bloco antes.
+    /// @param {Real} _dir Direção do movimento.
+    try_step_down = function(_dir) {
+        var _below = instance_place(x, y + 1, oBlock);
+        if (_below != noone) return;
+
+        var _behind = instance_place(x - _dir, y + 1, oBlock);
+        if (_behind != noone) {
+            y++;
         }
     }
 
