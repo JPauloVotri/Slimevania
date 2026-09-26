@@ -30,7 +30,9 @@
     {"$GMFolder":"","%Name":"Tilesets","folderPath":"folders/Tilesets.yy","name":"Tilesets","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
-  "IncludedFiles":[],
+  "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":"gamecontrollerdb.txt","CopyToMask":-1,"filePath":"datafiles","name":"gamecontrollerdb.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+  ],
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
@@ -60,6 +62,8 @@
     {"id":{"name":"room_n1_n1","path":"rooms/room_n1_n1/room_n1_n1.yy",},},
     {"id":{"name":"scEnums","path":"scripts/scEnums/scEnums.yy",},},
     {"id":{"name":"scGameManager","path":"scripts/scGameManager/scGameManager.yy",},},
+    {"id":{"name":"scInput","path":"scripts/scInput/scInput.yy",},},
+    {"id":{"name":"scInputManager","path":"scripts/scInputManager/scInputManager.yy",},},
     {"id":{"name":"scMap","path":"scripts/scMap/scMap.yy",},},
     {"id":{"name":"scMapDraw","path":"scripts/scMapDraw/scMapDraw.yy",},},
     {"id":{"name":"scMapTile","path":"scripts/scMapTile/scMapTile.yy",},},
