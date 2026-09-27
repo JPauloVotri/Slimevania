@@ -158,6 +158,7 @@ keys = { };
          */
         var dashing_create = function() {
             recharge = DASH_RECHARGE;
+            ignoreSlopeDown = true;
 
             var _direction = new Vector2(
                 keys.right - keys.left,
@@ -217,7 +218,8 @@ keys = { };
             velocity.rewrite(
                 min(abs(velocity.x), MOVEMENT_SPEED) * sign(velocity.x),
                 clamp(velocity.y, -JUMP_SPEED / 2, MAX_FALL_SPEED)
-            )
+            );
+            ignoreSlopeDown = false;
         }
 
         /** Inicia o estado "CLIMBING" do jogador

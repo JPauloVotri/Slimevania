@@ -1,6 +1,8 @@
 #region Inicialização
     velocity = new Vector2(0, 0);
     velocityReminder = new Vector2(0, 0);
+    ignoreSlopeDown = false;
+    ignoreSlopeUp = false;
 #endregion
 
 #region Utilitários
@@ -29,8 +31,8 @@
 #region Movimento e colisão
     /// Movimenta o ator com precisão de pixel, considerando colisões com objetos sólidos.
     /// @param {Struct.Vector2} _velocity Velocidade do movimento.
-    /// @param {Function} _x_collision_event Função a ser chamada quando houver colisão no eixo X. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
-    /// @param {Function} _y_collision_event Função a ser chamada quando houver colisão no eixo Y. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
+    /// @param {[Function]} _x_collision_event Função a ser chamada quando houver colisão no eixo X. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
+    /// @param {[Function]} _y_collision_event Função a ser chamada quando houver colisão no eixo Y. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
     function move(
         _velocity,
         _x_collision_event = function(_instance) { collide_x(); },
@@ -62,7 +64,7 @@
             var _collisionInstance = instance_place(x + _dir, y, oBlock);
 
             if (_collisionInstance != noone) {
-                if (try_step_up(_dir)) {
+                if (!ignoreSlopeUp && try_step_up(_dir)) {
                     _amount -= _dir;
 
                     if (abs(_amount) >= 1) {
@@ -86,7 +88,9 @@
             x += _dir;
             _amount -= _dir;
 
-            try_step_down(_dir);
+            if (!ignoreSlopeDown) {
+                try_step_down(_dir);
+            }
         }
     }
 
