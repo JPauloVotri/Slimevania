@@ -140,13 +140,16 @@
     /// Tenta descer um degrau quando há espaço livre abaixo e um bloco antes.
     /// @param {Real} _dir Direção do movimento.
     try_step_down = function(_dir) {
-        var _below = instance_place(x, y + 1, oBlock);
-        if (_below != noone) return;
+        // Tem bloco 1px abaixo?
+        if (instance_place(x, y + 1, oBlock) != noone) return;
 
-        var _behind = instance_place(x - _dir, y + 1, oBlock);
-        if (_behind != noone) {
-            y++;
-        }
+        // Não tem bloco 2px abaixo? (Não configura mais uma rampa)
+        if (instance_place(x, y + 2, oBlock) == noone) return;
+
+        // Não está vindo de um chão válido? (Não está caminhando)
+        if (instance_place(x - _dir, y + 1, oBlock) == noone) return;
+
+        y++;
     }
 
     /// Verifica se a próxima posição do ator ultrapassa os limites da sala atual.
