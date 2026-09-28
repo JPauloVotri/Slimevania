@@ -8,7 +8,10 @@ on_trigger = function(_instance) {
     var _ts = time_source_create(
         time_source_game, .5, time_source_units_seconds,
         function(_s) {
-            if (instance_exists(_s)) _s.keys.usePower = 1;
+            if (instance_exists(_s)) {
+				_s.keys.usePower = 1;
+				_s.MOVEMENT_SPEED = 3;
+			}
         },
         [_shadow]
     );
