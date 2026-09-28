@@ -62,6 +62,7 @@ keys = { };
             var _isOnOneWay = place_meeting(x, y + 1, oOneWayBlock);
 
             if (keys.jump) {
+                oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
             } else if (_isOnOneWay && keys.descend) {
                 y++;
@@ -97,6 +98,7 @@ keys = { };
             var _isOnOneWay = place_meeting(x, y + 1, oOneWayBlock);
 
             if (keys.jump) {
+                oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
             } else if (_isOnOneWay && keys.descend) {
                 y++;
@@ -126,6 +128,7 @@ keys = { };
             }
 
             if (keys.jumpRelease && velocity.y < 0) {
+                oGame.inputKeys.pad1.fully_release();
                 velocity.y /= 2;
                 velocityReminder.y = 0;
             }
@@ -155,6 +158,7 @@ keys = { };
          */
         var dashing_create = function() {
             recharge = DASH_RECHARGE;
+            ignoreSlopeDown = true;
 
             var _direction = new Vector2(
                 keys.right - keys.left,
@@ -214,7 +218,8 @@ keys = { };
             velocity.rewrite(
                 min(abs(velocity.x), MOVEMENT_SPEED) * sign(velocity.x),
                 clamp(velocity.y, -JUMP_SPEED / 2, MAX_FALL_SPEED)
-            )
+            );
+            ignoreSlopeDown = false;
         }
 
         /** Inicia o estado "CLIMBING" do jogador

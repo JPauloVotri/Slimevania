@@ -1,6 +1,8 @@
 #region Inicialização
     velocity = new Vector2(0, 0);
     velocityReminder = new Vector2(0, 0);
+    ignoreSlopeDown = false;
+    ignoreSlopeUp = false;
 #endregion
 
 #region Utilitários
@@ -29,95 +31,129 @@
 #region Movimento e colisão
     /// Movimenta o ator com precisão de pixel, considerando colisões com objetos sólidos.
     /// @param {Struct.Vector2} _velocity Velocidade do movimento.
-    /// @param {Function} _x_collision_event Função a ser chamada quando houver colisão no eixo X. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
-    /// @param {Function} _y_collision_event Função a ser chamada quando houver colisão no eixo Y. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
+    /// @param {[Function]} _x_collision_event Função a ser chamada quando houver colisão no eixo X. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
+    /// @param {[Function]} _y_collision_event Função a ser chamada quando houver colisão no eixo Y. Recebe como parâmetro a instância do objeto sólido com o qual houve a colisão.
     function move(
         _velocity,
         _x_collision_event = function(_instance) { collide_x(); },
         _y_collision_event = function(_instance) { collide_y(); }
     ) {
         velocityReminder.addRW(_velocity);
-        var _move = velocityReminder.abs();
-        _move.flrRW();
-        _move.componentMultiplyRW(velocityReminder.sign());
 
-        // Movimento no eixo X
+        var _move = velocityReminder.abs().flrRW()
+            .componentMultiplyRW(velocityReminder.sign());
+
         if (_move.x != 0) {
-            velocityReminder.x -= _move.x;
-            var _dir = sign(_move.x);
-
-            while (_move.x != 0) {
-                var _collision_instance = instance_place(x + _dir, y, oBlock);
-
-                if (_collision_instance != noone) {
-                    _collision_instance = instance_place(x + _dir, y - 1, oBlock);
-
-                    if (_collision_instance == noone && on_solid()) {
-                        x += _dir;
-                        y--;
-                        _move.x -= _dir;
-
-                        if (abs(_move.x) >= 1) {
-                            _move.x -= _dir;
-                        } else {
-                            velocityReminder.x -= _dir;
-                        }
-
-                        continue;
-                    }
-                    _x_collision_event(_collision_instance);
-                    break;
-                }
-
-                if (check_room_limits_collision(_dir, 0)) {
-                    _x_collision_event(noone);
-                    break;
-                }
-
-                x += _dir;
-                _move.x -= _dir;
-
-                _collision_instance = instance_place(x, y + 1, oBlock);
-                if (_collision_instance == noone) {
-                    _collision_instance = instance_place(x - _dir, y + 1, oBlock);
-
-                    if (_collision_instance != noone) {
-                        y++;
-                    }
-                }
-            }
+            __move_x(_move.x, _x_collision_event);
         }
 
-        // Movimento no eixo Y
         if (_move.y != 0) {
-            velocityReminder.y -= _move.y;
-            var _dir = sign(_move.y);
+            __move_y(_move.y, _y_collision_event);
+        }
+    }
 
-            while (_move.y != 0) {
-                var _collision_instance = instance_place(x, y + _dir, oBlock);
+    /// Move o ator no eixo X, pixel a pixel, tratando colisões e step-up.
+    /// @param {Real} _amount Quantidade a mover no eixo X.
+    /// @param {Function} _on_collision Callback ao colidir.
+    __move_x = function(_amount, _on_collision) {
+        var _dir = sign(_amount);
 
-                if (_collision_instance != noone) {
-                    _y_collision_event(_collision_instance);
-                    break;
+        velocityReminder.x -= _amount;
+
+        while (_amount != 0) {
+            var _collisionInstance = instance_place(x + _dir, y, oBlock);
+
+            if (_collisionInstance != noone) {
+                if (!ignoreSlopeUp && try_step_up(_dir)) {
+                    _amount -= _dir;
+
+                    if (abs(_amount) >= 1) {
+                        _amount -= _dir;
+                    } else {
+                        velocityReminder.x -= _dir;
+                    }
+
+                    continue;
                 }
 
-                // Colisão com sólidos de apenas uma direção
-                _collision_instance = instance_place(x, y + _dir, oOneWayBlock);
-                if (_collision_instance != noone &&
-                    bbox_bottom <= _collision_instance.bbox_top) {
-                    _y_collision_event(_collision_instance);
-                    break;
-                }
+                _on_collision(_collisionInstance);
+                break;
+            }
 
-                if (check_room_limits_collision(0, _dir)) {
-                    _y_collision_event(noone);
-                    break;
-                }
+            if (check_room_limits_collision(_dir, 0)) {
+                _on_collision(noone);
+                break;
+            }
 
-                y += _dir;
-                _move.y -= _dir;
+            x += _dir;
+            _amount -= _dir;
+
+            if (!ignoreSlopeDown) {
+                try_step_down(_dir);
             }
         }
+    }
+
+    /// Move o ator no eixo Y, pixel a pixel, tratando colisões e blocos unidirecionais.
+    /// @param {Real} _amount Quantidade a mover no eixo Y.
+    /// @param {Function} _on_collision Callback ao colidir.
+    __move_y = function(_amount, _on_collision) {
+        var _dir = sign(_amount);
+        velocityReminder.y -= _amount;
+
+        while (_amount != 0) {
+            var _collisionInstance = instance_place(x, y + _dir, oBlock);
+
+            if (_collisionInstance != noone) {
+                _on_collision(_collisionInstance);
+                break;
+            }
+
+            // Colisão com sólidos de apenas uma direção
+            _collisionInstance = instance_place(x, y + _dir, oOneWayBlock);
+            if (_collisionInstance != noone && bbox_bottom <= _collisionInstance.bbox_top) {
+                _on_collision(_collisionInstance);
+                break;
+            }
+
+            if (check_room_limits_collision(0, _dir)) {
+                _on_collision(noone);
+                break;
+            }
+
+            y += _dir;
+            _amount -= _dir;
+        }
+    }
+
+    /// Tenta subir um degrau quando há um bloco à frente e espaço livre acima.
+    /// @param {Real} _dir Direção do movimento.
+    /// @returns {Bool} True se conseguiu subir.
+    try_step_up = function(_dir) {
+        var _above = instance_place(x + _dir, y - 1, oBlock);
+
+        if (_above != noone) return false;
+        if (!on_solid()) return false;
+
+        x += _dir;
+        y--;
+
+        return true;
+    }
+
+    /// Tenta descer um degrau quando há espaço livre abaixo e um bloco antes.
+    /// @param {Real} _dir Direção do movimento.
+    try_step_down = function(_dir) {
+        // Tem bloco 1px abaixo?
+        if (instance_place(x, y + 1, oBlock) != noone) return;
+
+        // Não tem bloco 2px abaixo? (Não configura mais uma rampa)
+        if (instance_place(x, y + 2, oBlock) == noone) return;
+
+        // Não está vindo de um chão válido? (Não está caminhando)
+        if (instance_place(x - _dir, y + 1, oBlock) == noone) return;
+
+        y++;
     }
 
     /// Verifica se a próxima posição do ator ultrapassa os limites da sala atual.
