@@ -39,10 +39,13 @@ function RoomManager() constructor {
         }
 
         room_goto(_room);
+		
+		var _transitionError = new Vector2(-32, -32);
+		_transitionError.componentMultiplyRW(_transitionDir.sign());
 
         if (instance_exists(oPlayer)) {
-            oPlayer.x -= _transitionDir.x * room_width;
-            oPlayer.y -= _transitionDir.y * room_height;
+            oPlayer.x -= (_transitionDir.x * room_width) + _transitionError.x;
+            oPlayer.y -= (_transitionDir.y * room_height) + _transitionError.y;
         }
     }
 
