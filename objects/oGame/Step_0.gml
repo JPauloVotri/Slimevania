@@ -5,12 +5,19 @@ if (inputKeys.start.check_pressed()) {
     isPaused = !isPaused;
 
     if (isPaused) {
+		pauseBackground = surface_create(display_get_gui_width(), display_get_gui_height());
+		surface_set_target(pauseBackground);
+		draw_surface(application_surface, 0, 0);
+		surface_reset_target();
+		
         instance_deactivate_all(true);
         audio_pause_all();
         menuMapCenter.rewriteRW(roomManager.get_current_room_position());
     } else {
         instance_activate_all();
         audio_resume_all();
+		
+		if (surface_exists(pauseBackground)) surface_free(pauseBackground);
     }
 }
 
