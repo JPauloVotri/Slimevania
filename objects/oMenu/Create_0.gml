@@ -29,6 +29,12 @@ on_step = undefined;
 on_draw = undefined;
 
 /// @type {Function|Undefined}
+panel_draw = undefined;
+
+/// @type {Function|Undefined}
+default_panel_draw = undefined;
+
+/// @type {Function|Undefined}
 on_destroy = undefined;
 
 /// @param {Function} _on_step
@@ -42,6 +48,18 @@ set_on_step = function(_on_step) {
 /// @returns {Id.Instance.oMenu}
 set_on_draw = function(_on_draw) {
     on_draw = _on_draw;
+    return self;
+}
+
+/// @param {Function} _panel_draw
+/// @returns {Id.Instance.oMenu}
+set_panel_draw = function(_panel_draw) {
+    panel_draw = _panel_draw;
+
+    if (is_undefined(default_panel_draw)) {
+        default_panel_draw = _panel_draw;
+    }
+
     return self;
 }
 

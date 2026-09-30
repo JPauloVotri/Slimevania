@@ -201,7 +201,7 @@ function open_pause_menu() {
                 draw_set_color(C_OVERLAY0);
                 draw_text(_center - _optionWidth div 4, _middle, ">");
             }
-
+        }).set_panel_draw(function(_menu) {
             menuMapDraw.draw(roomManager.get_current_room_position(), menuMapCenter);
         })
         .set_on_destroy(function(_menu) {
