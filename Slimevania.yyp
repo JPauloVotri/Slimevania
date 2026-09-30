@@ -66,6 +66,7 @@
     {"id":{"name":"room_1_0","path":"rooms/room_1_0/room_1_0.yy",},},
     {"id":{"name":"room_1_n1","path":"rooms/room_1_n1/room_1_n1.yy",},},
     {"id":{"name":"room_n1_n1","path":"rooms/room_n1_n1/room_n1_n1.yy",},},
+    {"id":{"name":"scColors","path":"scripts/scColors/scColors.yy",},},
     {"id":{"name":"scEnums","path":"scripts/scEnums/scEnums.yy",},},
     {"id":{"name":"scGameManager","path":"scripts/scGameManager/scGameManager.yy",},},
     {"id":{"name":"scInput","path":"scripts/scInput/scInput.yy",},},

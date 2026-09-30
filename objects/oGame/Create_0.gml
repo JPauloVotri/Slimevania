@@ -136,9 +136,9 @@ function open_pause_menu() {
         }).set_on_step(function(_menu) {
             /// @self Id.Instance.oMenu
             with (_menu) {
-                var _optionWidth = view_get_wport(0) div (optionsCount + 2);
-                var _optionsLeft = x + _optionWidth;
-                var _optionsRight = x + width - _optionWidth;
+                var _optionWidth = view_get_wport(0) div (optionsCount + 1);
+                var _optionsLeft = x + _optionWidth div 2;
+                var _optionsRight = x + width - _optionWidth div 2;
 
                 if (point_in_rectangle(mouse_x, mouse_y, _optionsLeft, y, _optionsRight, y + heightFull)) {
                     mouseOver = true;
@@ -166,32 +166,40 @@ function open_pause_menu() {
         .set_on_draw(function(_menu) {
             /// @self Id.Instance.oMenu
             with (_menu) {
-                var _optionWidth = view_get_wport(0) div (optionsCount + 2);
-                var _center = x + _optionWidth + _optionWidth div 2;
+                var _optionWidth = view_get_wport(0) div (optionsCount + 1);
+                var _center = x + _optionWidth;
                 var _middle = y + heightFull div 2;
 
                 draw_set_font(ftPixelOperator);
                 draw_set_halign(fa_center);
                 draw_set_valign(fa_middle);
 
-                draw_set_color(c_black);
+                draw_set_color(C_MANTLE);
+                draw_rectangle(0, 0, view_get_wport(0), view_get_hport(0), false);
+
+                draw_set_color(C_BASE);
                 draw_rectangle(x, y, x + width, y + heightFull, false);
 
-                draw_set_color(c_white);
-                draw_text(x + _optionWidth div 2, _middle, "<");
+                draw_set_color(C_OVERLAY0);
+                draw_text(x + _optionWidth div 4, _middle, "<");
 
                 for (var _i = 0; _i < optionsCount; _i++) {
                     var _label = options[_i].label;
                     var _isHovered = hover == _i;
+                    var _left = _center - _optionWidth div 2;
 
-                    draw_set_color(_isHovered ? c_yellow : c_white);
+                    draw_set_color(_isHovered ? C_GREEN : C_TEXT);
                     draw_text(_center, _middle, _label);
+
+                    if (_isHovered) {
+                        draw_rectangle(_left, y, _left + _optionWidth, y + 1, false);
+                    }
 
                     _center += _optionWidth;
                 }
 
-                draw_set_color(c_white);
-                draw_text(_center, _middle, ">");
+                draw_set_color(C_OVERLAY0);
+                draw_text(_center - _optionWidth div 4, _middle, ">");
             }
 
             menuMapDraw.draw(roomManager.get_current_room_position(), menuMapCenter);
