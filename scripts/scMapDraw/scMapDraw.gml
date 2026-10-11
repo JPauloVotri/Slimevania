@@ -24,8 +24,32 @@ function MapDraw(_map, _position, _width, _height) constructor {
     limit = {
         left: position.x - border,
         top: position.y - border,
-        right: position.x + border + _width * tileSize.x,
-        bottom: position.y + border + _height * tileSize.y,
+        right: position.x + border + width * tileSize.x,
+        bottom: position.y + border + height * tileSize.y,
+    }
+
+    /// Atualiza a posição do mapa na interface.
+    /// @param {Struct.Vector2} _position Nova posição do mapa na interface.
+    set_position = function(_position) {
+        position.rewriteRW(_position);
+        update_limits();
+    }
+
+    /// Ajusta a dimensão do mapa em tiles.
+    /// @param {Real} _width Nova largura do mapa em tiles.
+    /// @param {Real} _height Nova altura do mapa em tiles.
+    set_size = function(_width, _height) {
+        width = _width;
+        height = _height;
+        update_limits();
+    }
+
+    /// Recalcula os limites da área visível do mapa com base na posição atual, no tamanho e na borda.
+    update_limits = function() {
+        limit.left = position.x - border;
+        limit.top = position.y - border;
+        limit.right = position.x + border + width * tileSize.x;
+        limit.bottom = position.y + border + height * tileSize.y;
     }
 
     /// Calcula a opacidade do mapa com base na distância até o jogador.

@@ -57,6 +57,30 @@ isPaused = false;
             .add_keyboard_key(vk_escape)
             .add_gamepad_button(gp_start),
 
+        uiRight: inputManager.create_input()
+            .add_keyboard_key(vk_right)
+            .add_keyboard_key(ord("D"))
+            .add_gamepad_button(gp_padr)
+            .add_gamepad_left_stick(INPUT_AXIS.RIGHT),
+
+        uiLeft: inputManager.create_input()
+            .add_keyboard_key(vk_left)
+            .add_keyboard_key(ord("A"))
+            .add_gamepad_button(gp_padl)
+            .add_gamepad_left_stick(INPUT_AXIS.LEFT),
+
+        uiUp: inputManager.create_input()
+            .add_keyboard_key(vk_up)
+            .add_keyboard_key(ord("W"))
+            .add_gamepad_button(gp_padu)
+            .add_gamepad_left_stick(INPUT_AXIS.UP),
+
+        uiDown: inputManager.create_input()
+            .add_keyboard_key(vk_down)
+            .add_keyboard_key(ord("S"))
+            .add_gamepad_button(gp_padd)
+            .add_gamepad_left_stick(INPUT_AXIS.DOWN),
+
         next: inputManager.create_input()
             .add_keyboard_key(vk_pagedown)
             .add_keyboard_key(ord("E"))
@@ -123,88 +147,69 @@ function open_pause_menu() {
         }),
     ];
 
-    return menu(0, 0, _options, undefined, function(_menu) {
-            /// @self Id.Instance.oMenu
-            with (_menu) {
-                margin = 4;
-                height = 18;
-                width = view_get_wport(0) - x * 2;
-                heightFull = height + margin * 2;
+    return menu(0, 0, [-1, 0], [-1, 0], [4, 4, 1, 4], _options, ftPixelOperator, undefined, true, function(_menu) {
+        var _cellSize = new Vector2(16, 9);
+        var _margin = _cellSize.copy().scaleRW(1.5).rndRW();
+        var _menuHeight = 0;
 
-                draw_set_font(ftPixelOperator);
+        /// @self Id.Instance.oMenu
+        with (_menu) {
+            inputs.previous = INPUT_KEYS.previous;
+            inputs.next = INPUT_KEYS.next;
+
+            _menuHeight = heightFull + margin.bottom;
+        }
+
+        var _mapSpace = new Vector2(
+            view_get_wport(0) - _margin.x * 2,
+            view_get_hport(0) - _menuHeight - _margin.y * 2
+        );
+        var _mapSize = new Vector2(
+            _mapSpace.x div _cellSize.x,
+            _mapSpace.y div _cellSize.y
+        );
+        var _mapPosition = new Vector2(
+            _margin.x,
+            view_get_hport(0) - _margin.y - _mapSize.y * _cellSize.y
+        );
+
+        menuMapDraw.set_position(_mapPosition);
+        menuMapDraw.set_size(_mapSize.x, _mapSize.y);
+    })
+    .set_on_draw(function(_menu) {
+        draw_set_color(C_MANTLE);
+
+        /// @self Id.Instance.oMenu
+        with (_menu) {
+            draw_rectangle(0, heightFull + margin.bottom, view_get_wport(0), view_get_hport(0), false);
+        }
+
+        menuMapDraw.draw(roomManager.get_current_room_position(), menuMapCenter);
+
+        // TODO: Apenas para testes. Remover depois.
+        draw_set_color(c_red);
+        draw_rectangle(mouse_x, mouse_y, mouse_x, mouse_y, false);
+    })
+    .set_option_draw(function(_menu, _option, _x, _y, _isHovered) {
+        draw_set_halign(fa_center);
+
+        /// @self Id.Instance.oMenu
+        with (_menu) {
+            draw_set_color(_isHovered ? colors.hover : colors.text);
+            draw_text(_x + optionsSize.x div 2 - optionsBorder.left, _y, _option.label);
+
+            if (_isHovered) {
+                draw_rectangle(
+                    _x - optionsBorder.left,
+                    _y - optionsBorder.top,
+                    _x - optionsBorder.right + optionsSize.x - 1,
+                    _y - optionsBorder.top + 1,
+                    false
+                );
             }
-        }).set_on_step(function(_menu) {
-            /// @self Id.Instance.oMenu
-            with (_menu) {
-                var _optionWidth = view_get_wport(0) div (optionsCount + 1);
-                var _optionsLeft = x + _optionWidth div 2;
-                var _optionsRight = x + width - _optionWidth div 2;
-
-                if (point_in_rectangle(mouse_x, mouse_y, _optionsLeft, y, _optionsRight, y + heightFull)) {
-                    mouseOver = true;
-
-                    if (mousePrev.x != mouse_x || mousePrev.y != mouse_y) {
-                        var _mouseHover = (mouse_x - _optionsLeft) div _optionWidth;
-                        hover = clamp(_mouseHover, 0, optionsCount - 1);
-                    }
-                }
-
-                if (inputs.cancel.check_pressed() || inputs.close.check_pressed()) {
-                    instance_destroy();
-                    return;
-                }
-
-                hover += inputs.next.check_stutter(20, 10) - inputs.previous.check_stutter(20, 10);
-                hover = (hover + optionsCount) % optionsCount;
-
-                if ((mouse_check_button_pressed(mb_left) && mouseOver) || inputs.confirm.check_pressed()) {
-                    var _func = options[hover].action;
-                    if (!is_undefined(_func)) _func(self);
-                }
-            }
-        })
-        .set_on_draw(function(_menu) {
-            /// @self Id.Instance.oMenu
-            with (_menu) {
-                var _optionWidth = view_get_wport(0) div (optionsCount + 1);
-                var _center = x + _optionWidth;
-                var _middle = y + heightFull div 2;
-
-                draw_set_font(ftPixelOperator);
-                draw_set_halign(fa_center);
-                draw_set_valign(fa_middle);
-
-                draw_set_color(C_MANTLE);
-                draw_rectangle(0, 0, view_get_wport(0), view_get_hport(0), false);
-
-                draw_set_color(C_BASE);
-                draw_rectangle(x, y, x + width, y + heightFull, false);
-
-                draw_set_color(C_OVERLAY0);
-                draw_text(x + _optionWidth div 4, _middle, "<");
-
-                for (var _i = 0; _i < optionsCount; _i++) {
-                    var _label = options[_i].label;
-                    var _isHovered = hover == _i;
-                    var _left = _center - _optionWidth div 2;
-
-                    draw_set_color(_isHovered ? C_GREEN : C_TEXT);
-                    draw_text(_center, _middle, _label);
-
-                    if (_isHovered) {
-                        draw_rectangle(_left, y, _left + _optionWidth, y + 1, false);
-                    }
-
-                    _center += _optionWidth;
-                }
-
-                draw_set_color(C_OVERLAY0);
-                draw_text(_center - _optionWidth div 4, _middle, ">");
-            }
-        }).set_panel_draw(function(_menu) {
-            menuMapDraw.draw(roomManager.get_current_room_position(), menuMapCenter);
-        })
-        .set_on_destroy(function(_menu) {
-            toggle_pause_game();
-        });
+        }
+    })
+    .set_on_destroy(function(_menu) {
+        toggle_pause_game();
+    });
 }
