@@ -1,0 +1,29 @@
+/// Catppuccin Palette
+/// https://github.com/catppuccin/catppuccin
+
+#macro C_ROSEWATER #f5e0dc
+#macro C_FLAMINGO  #f2cdcd
+#macro C_PINK      #f5c2e7
+#macro C_MAUVE     #cba6f7
+#macro C_RED       #f38ba8
+#macro C_MAROON    #eba0ac
+#macro C_PEACH     #fab387
+#macro C_YELLOW    #f9e2af
+#macro C_GREEN     #a6e3a1
+#macro C_TEAL      #94e2d5
+#macro C_SKY       #89dceb
+#macro C_SAPPHIRE  #74c7ec
+#macro C_BLUE      #89b4fa
+#macro C_LAVENDER  #b4befe
+#macro C_TEXT      #cdd6f4
+#macro C_SUBTEXT1  #bac2de
+#macro C_SUBTEXT0  #a6adc8
+#macro C_OVERLAY2  #9399b2
+#macro C_OVERLAY1  #7f849c
+#macro C_OVERLAY0  #6c7086
+#macro C_SURFACE2  #585b70
+#macro C_SURFACE1  #45475a
+#macro C_SURFACE0  #313244
+#macro C_BASE      #1e1e2e
+#macro C_MANTLE    #181825
+#macro C_CRUST     #11111b

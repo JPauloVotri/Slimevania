@@ -1,6 +1,3 @@
-if (isPaused) {
-    menuMapDraw.draw(roomManager.get_current_room_position(), menuMapCenter);
-    return;
+if (!isPaused) {
+    miniMapDraw.draw(roomManager.get_current_room_position());
 }
-
-miniMapDraw.draw(roomManager.get_current_room_position());

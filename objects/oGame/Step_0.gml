@@ -1,17 +1,8 @@
 #macro KEY_STUTTER_DELAY 20
 #macro KEY_STUTTER_INTERVAL 10
 
-if (inputKeys.start.check_pressed()) {
-    isPaused = !isPaused;
-
-    if (isPaused) {
-        instance_deactivate_all(true);
-        audio_pause_all();
-        menuMapCenter.rewriteRW(roomManager.get_current_room_position());
-    } else {
-        instance_activate_all();
-        audio_resume_all();
-    }
+if (inputKeys.start.check_pressed() && !isPaused) {
+    toggle_pause_game();
 }
 
 if (isPaused) {
