@@ -49,9 +49,22 @@ isPaused = false;
             .add_keyboard_key(vk_space)
             .add_gamepad_button(gp_face1),
 
+        pad2: inputManager.create_input()
+            .add_keyboard_key(ord("Z"))
+            .add_keyboard_key(vk_enter)
+            .add_gamepad_button(gp_face2),
+
         pad3: inputManager.create_input()
             .add_keyboard_key(vk_shift)
             .add_gamepad_button(gp_face3),
+
+        shoulderRight: inputManager.create_input()
+            .add_keyboard_key(ord("E"))
+            .add_gamepad_button(gp_shoulderr),
+
+        shoulderLeft: inputManager.create_input()
+            .add_keyboard_key(ord("Q"))
+            .add_gamepad_button(gp_shoulderl),
 
         start: inputManager.create_input()
             .add_keyboard_key(vk_escape)

@@ -450,3 +450,17 @@ keys = { };
         return stateMachine.state.name == PLAYER_STATES.CUTSCENE;
     }
 #endregion
+
+#region Funções de projéteis
+    /// @param {Struct.Vector2} _dir
+    function shoot_projectile(_dir) {
+        var _position = new Vector2(x, y);
+
+        _position.addRW(_dir.copy().scaleRW(sprite_width div 2));
+
+        /// @self Id.Instance.oProjectile
+        with (instance_create_depth(_position.x, _position.y, depth - 1, oProjectile)) {
+            velocity.rewriteRW(_dir.scaleRW(SPEED));
+        }
+    }
+#endregion

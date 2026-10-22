@@ -9,6 +9,9 @@
     keys.jump = _keys.pad1.check_pressed(true);
     keys.jumpRelease = _keys.pad1.check_released(true);
     keys.usePower = _keys.pad3.check_pressed();
+    keys.shoot = _keys.pad2.check_pressed();
+    keys.aimDiagUp = _keys.shoulderRight.check();
+    keys.aimDiagDown = _keys.shoulderLeft.check();
 #endregion
 
 if (in_cutscene()) {
@@ -39,3 +42,19 @@ handle_power_up_pickup();
     stateMachine.update();
     move(velocity);
 #endregion
+
+var _aimDir = new Vector2(0, 0);
+
+if (facing != 0) {
+    _aimDir.y = keys.down - keys.up;
+
+    if (_aimDir.y == 0)
+        _aimDir.rewrite(facing, keys.aimDiagDown - keys.aimDiagUp);
+}
+
+_aimDir.normalizedRW();
+
+if (keys.shoot) {
+    if (_aimDir.magnitude() > 0)
+        shoot_projectile(_aimDir);
+}
