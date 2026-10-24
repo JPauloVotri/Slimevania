@@ -12,6 +12,7 @@
     keys.shoot = _keys.pad2.check_pressed();
     keys.aimDiagUp = _keys.shoulderRight.check();
     keys.aimDiagDown = _keys.shoulderLeft.check();
+    keys.resetSize = _keys.pad4.check_pressed();
 #endregion
 
 if (in_cutscene()) {
@@ -23,6 +24,8 @@ if (in_cutscene()) {
     keys.jump = 0;
     keys.jumpRelease = 0;
     keys.usePower = 0;
+    keys.shoot = 0;
+    keys.resetSize = 0;
 }
 
 // TODO: Encontrar um lugar melhor para isso
@@ -55,6 +58,13 @@ if (facing != 0) {
 _aimDir.normalizedRW();
 
 if (keys.shoot) {
-    if (_aimDir.magnitude() > 0)
+    if (_aimDir.magnitude() > 0 && can_shoot()) {
         shoot_projectile(_aimDir);
+        register_shot();
+    }
+}
+
+// TODO: remover — reset temporário para teste
+if (keys.resetSize) {
+    reset_size();
 }

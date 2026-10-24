@@ -58,6 +58,10 @@ isPaused = false;
             .add_keyboard_key(vk_shift)
             .add_gamepad_button(gp_face3),
 
+        pad4: inputManager.create_input()
+            .add_keyboard_key(ord("R"))
+            .add_gamepad_button(gp_face4),
+
         shoulderRight: inputManager.create_input()
             .add_keyboard_key(ord("E"))
             .add_gamepad_button(gp_shoulderr),

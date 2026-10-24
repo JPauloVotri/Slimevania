@@ -28,6 +28,108 @@ keys = { };
     DASH_RECHARGE = 2;
 #endregion
 
+#region Tamanho (massa)
+    SIZE_SPRITES = array_map(
+        ["sPlayer", "sPlayerMedium", "sPlayerSmall"],
+        function(_name) {
+            var _sprite = asset_get_index(_name);
+            return _sprite >= 0 ? _sprite : sPlayer;
+        }
+    );
+
+    sizeLevel = 0;
+    MIN_SIZE_LEVEL = array_length(SIZE_SPRITES) - 1;
+    SIZE_STEP = .5 / MIN_SIZE_LEVEL;
+    shotsPerSizeLevel = 2;
+    shotsOnLevel = 0;
+
+    sprite_index = SIZE_SPRITES[sizeLevel];
+
+    /// Retorna se o jogador ainda pode atirar.
+    /// @returns {Bool} True se o tamanho está acima do mínimo.
+    can_shoot = function() {
+        return sizeLevel < MIN_SIZE_LEVEL;
+    }
+
+    /// Retorna a fração atual do tamanho cheio.
+    /// @returns {Real} Fração do tamanho (1 = cheio, .5 = mínimo).
+    get_size_fraction = function() {
+        return 1 - sizeLevel * SIZE_STEP;
+    }
+
+    /// Troca o tamanho; ao crescer ancora os pés no chão.
+    /// @param {Real} _level Nível de tamanho alvo.
+    /// @returns {Bool} False se não couber (teto/parede no caminho).
+    set_size_level = function(_level) {
+        _level = clamp(_level, 0, MIN_SIZE_LEVEL);
+        if (_level == sizeLevel) return true;
+
+        var _oldSprite = sprite_index;
+        var _oldBottom = bbox_bottom;
+        var _oldLeft = x - bbox_left;
+        var _oldRight = bbox_right - x;
+
+        sprite_index = SIZE_SPRITES[_level];
+
+        var _baseY = y;
+        if (bbox_bottom > _oldBottom) {
+            _baseY = y + (_oldBottom - bbox_bottom);
+        }
+        var _maxLift = max((x - bbox_left) - _oldLeft, (bbox_right - x) - _oldRight, 0) + 1;
+        var _newY = _baseY;
+
+        while (
+            _newY > _baseY - _maxLift &&
+            (place_meeting(x, _newY, oBlock) || check_room_limits_collision(0, _newY - y))
+        ) {
+            _newY--;
+        }
+
+        if (place_meeting(x, _newY, oBlock) || check_room_limits_collision(0, _newY - y)) {
+            sprite_index = _oldSprite;
+            return false;
+        }
+
+        sizeLevel = _level;
+        y = _newY;
+        shotsOnLevel = 0;
+        return true;
+    }
+
+    /// Perde um nível de massa ao atirar.
+    shrink = function() {
+        return set_size_level(sizeLevel + 1);
+    }
+
+    /// Registra um tiro; perde um nível a cada shotsPerSizeLevel tiros.
+    register_shot = function() {
+        shotsOnLevel++;
+
+        if (shotsOnLevel >= shotsPerSizeLevel) {
+            shotsOnLevel = 0;
+            shrink();
+        }
+    }
+
+    /// Aumenta os tiros necessários para perder um nível de massa.
+    /// @param {Real} _amount Tiros a adicionar.
+    add_shots_per_level = function(_amount) {
+        shotsPerSizeLevel += _amount;
+    }
+
+    /// Cresce um ou mais níveis de massa.
+    /// @param {Real} _levels Níveis a crescer.
+    grow = function(_levels = 1) {
+        if (sizeLevel == 0) return false;
+        return set_size_level(sizeLevel - clamp(_levels, 1, sizeLevel));
+    }
+
+    /// Restaura o tamanho cheio.
+    reset_size = function() {
+        return set_size_level(0);
+    }
+#endregion
+
 #region Máquina de estados
     stateMachine = new StateMachine();
 
