@@ -44,6 +44,10 @@ handle_power_up_pickup();
 #region Máquina de estados e movimento
     stateMachine.update();
     move(velocity);
+
+    if (facing != 0) {
+        image_xscale = facing;
+    }
 #endregion
 
 var _aimDir = new Vector2(0, 0);

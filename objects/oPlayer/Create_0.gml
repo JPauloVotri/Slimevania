@@ -28,22 +28,39 @@ keys = { };
     DASH_RECHARGE = 2;
 #endregion
 
-#region Tamanho (massa)
-    SIZE_SPRITES = array_map(
-        ["sPlayer", "sPlayerMedium", "sPlayerSmall"],
-        function(_name) {
-            var _sprite = asset_get_index(_name);
-            return _sprite >= 0 ? _sprite : sPlayer;
-        }
-    );
+#region Animação
+    ANIM_SPRITES = {
+        idle: [sPlayerIdle, sPlayerIdleMedium, sPlayerIdleSmall],
+        walk: [sPlayerWalk, sPlayerWalkMedium, sPlayerWalkSmall],
+        dash: [sPlayerDash, sPlayerDashMedium, sPlayerDashSmall],
+        air: [sPlayerAir, sPlayerAirMedium, sPlayerAirSmall],
+    };
 
+    animName = "idle";
+
+    /// Troca a animação em execução e o sprite do tamanho atual.
+    /// @param {String} _name idle, walk, dash ou air.
+    play_animation = function(_name) {
+        if (animName == _name) return;
+
+        animName = _name;
+        sprite_index = ANIM_SPRITES[$ _name][sizeLevel];
+        image_index = 0;
+        image_speed = (_name == "air") ? 0 : 1;
+    }
+
+    /// Escolhe o frame do ar conforme a direção do movimento.
+    update_air_frame = function() {
+        image_index = (velocity.y < 0) ? 0 : 1;
+    }
+#endregion
+
+#region Tamanho (massa)
     sizeLevel = 0;
-    MIN_SIZE_LEVEL = array_length(SIZE_SPRITES) - 1;
+    MIN_SIZE_LEVEL = array_length(ANIM_SPRITES.idle) - 1;
     SIZE_STEP = .5 / MIN_SIZE_LEVEL;
     shotsPerSizeLevel = 2;
     shotsOnLevel = 0;
-
-    sprite_index = SIZE_SPRITES[sizeLevel];
 
     /// Retorna se o jogador ainda pode atirar.
     /// @returns {Bool} True se o tamanho está acima do mínimo.
@@ -69,7 +86,7 @@ keys = { };
         var _oldLeft = x - bbox_left;
         var _oldRight = bbox_right - x;
 
-        sprite_index = SIZE_SPRITES[_level];
+        sprite_index = ANIM_SPRITES[$ animName][_level];
 
         var _baseY = y;
         if (bbox_bottom > _oldBottom) {
@@ -134,6 +151,13 @@ keys = { };
     stateMachine = new StateMachine();
 
     #region Funções de controle dos States
+        /** Inicia o estado "IDLE" do jogador
+         * @self Asset.GMObject.oPlayer
+         */
+        var idle_create = function() {
+            play_animation("idle");
+        };
+
         /** Atualiza o estado "IDLE" do jogador
          * @self Asset.GMObject.oPlayer
          */
@@ -169,6 +193,13 @@ keys = { };
             } else if (_isOnOneWay && keys.descend) {
                 y++;
             }
+        };
+
+        /** Inicia o estado "WALKING" do jogador
+         * @self Asset.GMObject.oPlayer
+         */
+        var walking_create = function() {
+            play_animation("walk");
         };
 
         /** Atualiza o estado "WALKING" do jogador
@@ -213,6 +244,9 @@ keys = { };
         var on_air_create = function() {
             onAirInitialXDirection = sign(velocity.x);
             onAirDirectionChanged = false;
+
+            play_animation("air");
+            update_air_frame();
         }
 
         /** Atualiza o estado "ON_AIR" do jogador
@@ -222,6 +256,7 @@ keys = { };
             if (set_climbing_state()) return;
 
             velocity.y = min(velocity.y + GRAVITY, MAX_FALL_SPEED);
+            update_air_frame();
 
             if (on_solid() and velocity.y > 0) {
                 collide_y();
@@ -261,6 +296,8 @@ keys = { };
         var dashing_create = function() {
             recharge = DASH_RECHARGE;
             ignoreSlopeDown = true;
+
+            play_animation("dash");
 
             var _direction = new Vector2(
                 keys.right - keys.left,
@@ -332,6 +369,9 @@ keys = { };
             facing = climbSide;
             velocity.rewrite(0, SLIDE_SPEED);
             velocityReminder.rewrite(0, 0);
+
+            play_animation("air");
+            update_air_frame();
         }
 
         /** Atualiza o estado "CLIMBING" do jogador
@@ -374,6 +414,7 @@ keys = { };
             velocity.x = 0;
             velocityReminder.x = 0;
             velocity.y = keys.up ? -CLIMB_SPEED : SLIDE_SPEED;
+            update_air_frame();
         }
 
         /** Inicia o estado "LEDGE" do jogador
@@ -384,6 +425,9 @@ keys = { };
             velocity.rewrite(0, 0);
             velocityReminder.rewrite(0, 0);
             facing = -climbSide;
+
+            play_animation("air");
+            image_index = 0;
         }
 
         /** Atualiza o estado "LEDGE" do jogador
@@ -416,6 +460,13 @@ keys = { };
             velocityReminder.rewrite(0, 0);
         }
 
+        /** Inicia o estado "CUTSCENE" do jogador
+         * @self Asset.GMObject.oPlayer
+         */
+        var cutscene_create = function() {
+            play_animation("idle");
+        };
+
         /** Atualiza o estado "CUTSCENE" do jogador
          * @self Asset.GMObject.oPlayer
          */
@@ -434,9 +485,11 @@ keys = { };
     #endregion
 
     var idleState = new State(PLAYER_STATES.IDLE)
+        .set_create(idle_create)
         .set_update(idle_update);
 
     var walkingState = new State(PLAYER_STATES.WALKING)
+        .set_create(walking_create)
         .set_update(walking_update);
 
     var onAirState = new State(PLAYER_STATES.ON_AIR)
@@ -458,6 +511,7 @@ keys = { };
         .set_destroy(ledge_destroy);
 
     var cutsceneState = new State(PLAYER_STATES.CUTSCENE)
+        .set_create(cutscene_create)
         .set_update(cutscene_update);
 
     stateMachine
@@ -468,6 +522,10 @@ keys = { };
         .add_state(climbingState)
         .add_state(ledgeState)
         .add_state(cutsceneState);
+
+    sprite_index = ANIM_SPRITES.idle[sizeLevel];
+    image_index = 0;
+    image_speed = 1;
 #endregion
 
 #region Funções do player
