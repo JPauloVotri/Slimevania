@@ -612,11 +612,12 @@ keys = { };
 #endregion
 
 #region Funções de projéteis
-    /// @param {Struct.Vector2} _dir
+    /// Dispara um projétil a partir da "boca" do slime. O deslocamento usa a
+    /// meia largura em módulo, porque image_xscale é espelhado pela direção.
+    /// @param {Struct.Vector2} _dir Direção normalizada do disparo.
     function shoot_projectile(_dir) {
-        var _position = new Vector2(x, y);
-
-        _position.addRW(_dir.copy().scaleRW(sprite_width div 2));
+        var _offset = abs(sprite_width) * 0.5;
+        var _position = new Vector2(x, y).addRW(_dir.copy().scaleRW(_offset));
 
         /// @self Id.Instance.oProjectile
         with (instance_create_depth(_position.x, _position.y, depth - 1, oProjectile)) {
