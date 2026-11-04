@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scGameManager",
+  "%Name":"scActorManager",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scGameManager",
+  "name":"scActorManager",
   "parent":{
     "name":"Managers",
     "path":"folders/Scripts/Managers.yy",

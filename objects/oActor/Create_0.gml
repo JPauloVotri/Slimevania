@@ -1,3 +1,9 @@
+MAX_LIFE = noone;
+INITIAL_LIFE = noone;
+
+collected_life = noone;
+hits = 0;
+
 #region Inicialização
     velocity = new Vector2(0, 0);
     velocityReminder = new Vector2(0, 0);

@@ -17,9 +17,10 @@ if (droping) {
 			if (_instance != noone && _instance.object_index == oWaterSpring) {
 				y += _dir;
 				break;
-			} else if (_instance != noone) {
-				inst.alarm[0] = 120;
+			} else if (_instance != noone && _instance.object_index != oPlayer) {
+				if (instance_exists(inst)) inst.alarm[0] = 120;
 				instance_destroy();
+				break;
 			}
 		
 			y += _dir;

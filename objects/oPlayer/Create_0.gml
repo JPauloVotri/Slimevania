@@ -1,6 +1,11 @@
 // Herda os eventos do objeto pai
 event_inherited();
 
+actorManager = new ActorManager(self);
+
+WATER_HEAL_INTERVAL = game_get_speed(gamespeed_fps) * .5; // meio segundo em frames (30)
+waterHealTimer = 0;
+
 GRAVITY = .15;
 JUMP_SPEED = 5;
 MAX_FALL_SPEED = 4;
@@ -369,6 +374,21 @@ keys = { };
 #endregion
 
 #region Funções do player
+	/// Regenera vida enquanto o jogador estiver dentro da água.
+	function handle_water_regen() {
+	    if (!place_meeting(x, y, oWater)) {
+	        waterHealTimer = 0;
+	        return;
+	    }
+
+	    waterHealTimer++;
+
+	    if (waterHealTimer >= WATER_HEAL_INTERVAL) {
+	        waterHealTimer = 0;
+	        actorManager.healActor(1);
+	    }
+	}
+	
     /// Destrói blocos quebráveis atingidos durante o dash.
     function handle_dash_cracked_block_collision() {
         var _crackedBlock = instance_place(

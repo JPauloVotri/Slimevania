@@ -12,3 +12,5 @@ y = oPlayer.y - gameSize.y * .5;
 application_surface_enable(false);
 camera_set_view_size(view_camera[0], gameSize.x + 1, gameSize.y + 1);
 display_set_gui_size(gameSize.x, gameSize.y);
+
+hud = new HudManager();
