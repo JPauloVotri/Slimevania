@@ -15,6 +15,7 @@ miniMapDraw = new MapDraw(roomManager.map, _minimapPosition, 5, 5);
 menuMapDraw = new MapDraw(roomManager.map, _menuMapPosition, _menuMapSize.x, _menuMapSize.y);
 menuMapCenter = new Vector2(0, 0);
 isPaused = false;
+pauseBackground = noone;
 
 #region Inputs
     gamepads = []; // Variável que será usada para listagem de controles.

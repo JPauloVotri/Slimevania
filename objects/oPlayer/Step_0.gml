@@ -1,5 +1,7 @@
 #region Inputs
     var _keys = oGame.inputKeys;
+	
+	var _getHit = keyboard_check_pressed(ord("R"));
 
     keys.left = _keys.left.check();
     keys.right = _keys.right.check();
@@ -10,6 +12,10 @@
     keys.jumpRelease = _keys.pad1.check_released(true);
     keys.usePower = _keys.pad3.check_pressed();
 #endregion
+
+if (_getHit) {
+	actorManager.hit(4);
+}
 
 if (in_cutscene()) {
     keys.left = 0;
@@ -23,6 +29,8 @@ if (in_cutscene()) {
 }
 
 // TODO: Encontrar um lugar melhor para isso
+handle_water_regen();
+
 var _dir = keys.right - keys.left;
 if (_dir != 0) {
     facing = _dir;

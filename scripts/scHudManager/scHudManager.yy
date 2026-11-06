@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scHudManager",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scHudManager",
+  "parent":{
+    "name":"Managers",
+    "path":"folders/Scripts/Managers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
