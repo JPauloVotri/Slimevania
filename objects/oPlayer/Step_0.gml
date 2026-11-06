@@ -11,6 +11,10 @@
     keys.jump = _keys.pad1.check_pressed(true);
     keys.jumpRelease = _keys.pad1.check_released(true);
     keys.usePower = _keys.pad3.check_pressed();
+    keys.shoot = _keys.pad2.check_pressed();
+    keys.aimDiagUp = _keys.shoulderRight.check();
+    keys.aimDiagDown = _keys.shoulderLeft.check();
+    keys.resetSize = _keys.pad4.check_pressed();
 #endregion
 
 if (_getHit) {
@@ -26,6 +30,8 @@ if (in_cutscene()) {
     keys.jump = 0;
     keys.jumpRelease = 0;
     keys.usePower = 0;
+    keys.shoot = 0;
+    keys.resetSize = 0;
 }
 
 // TODO: Encontrar um lugar melhor para isso
@@ -46,4 +52,31 @@ handle_power_up_pickup();
 #region Máquina de estados e movimento
     stateMachine.update();
     move(velocity);
+
+    if (facing != 0) {
+        image_xscale = facing;
+    }
 #endregion
+
+var _aimDir = new Vector2(0, 0);
+
+if (facing != 0) {
+    _aimDir.y = keys.down - keys.up;
+
+    if (_aimDir.y == 0)
+        _aimDir.rewrite(facing, keys.aimDiagDown - keys.aimDiagUp);
+}
+
+_aimDir.normalizedRW();
+
+if (keys.shoot) {
+    if (_aimDir.magnitude() > 0 && can_shoot()) {
+        shoot_projectile(_aimDir);
+        register_shot();
+    }
+}
+
+// TODO: remover — reset temporário para teste
+if (keys.resetSize) {
+    reset_size();
+}
