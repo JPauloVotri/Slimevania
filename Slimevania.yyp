@@ -51,6 +51,7 @@
     {"id":{"name":"oBlock","path":"objects/oBlock/oBlock.yy",},},
     {"id":{"name":"oCamera","path":"objects/oCamera/oCamera.yy",},},
     {"id":{"name":"oCrackedBlock","path":"objects/oCrackedBlock/oCrackedBlock.yy",},},
+    {"id":{"name":"oCutscene","path":"objects/oCutscene/oCutscene.yy",},},
     {"id":{"name":"oDropOfWater","path":"objects/oDropOfWater/oDropOfWater.yy",},},
     {"id":{"name":"oGame","path":"objects/oGame/oGame.yy",},},
     {"id":{"name":"oHalfBlock","path":"objects/oHalfBlock/oHalfBlock.yy",},},

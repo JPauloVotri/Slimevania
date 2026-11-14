@@ -558,7 +558,7 @@ keys = { };
         );
 
         if (_crackedBlock) {
-            oGame.roomManager.destroy_instance_and_persist(_crackedBlock);
+            oGame.roomManager.destroy_connected_block(_crackedBlock);
         }
     }
 

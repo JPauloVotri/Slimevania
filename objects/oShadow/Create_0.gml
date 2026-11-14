@@ -6,7 +6,7 @@ MAX_FALL_SPEED = 0;
 MOVEMENT_SPEED = 0;
 
 facing = 0;
-keys = { };
+//keys = { };
 
 #region Powerups
     powersList = ["powerDash"];
