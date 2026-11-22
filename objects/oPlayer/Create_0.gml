@@ -4,7 +4,9 @@ event_inherited();
 actorManager = new ActorManager(self);
 
 WATER_HEAL_INTERVAL = game_get_speed(gamespeed_fps) * .5; // meio segundo em frames (30)
+STRANGE_WATER_HIT_INTERVAL = game_get_speed(gamespeed_fps) * .8
 waterHealTimer = 0;
+strangeWaterHitTimer = 0;
 
 GRAVITY = .15;
 JUMP_SPEED = 5;
@@ -547,6 +549,21 @@ keys = { };
 	        waterHealTimer = 0;
 	        actorManager.healActor(1);
 	    }
+	}
+	
+	/// Retira vida enquanto o jogador estiver dentro da água estranha.
+	function handle_strange_water_hit() {
+		if (!place_meeting(x, y, oStrangeWater)) {
+			strangeWaterHitTimer = 0;
+			return;
+		}
+		
+		strangeWaterHitTimer++;
+		
+		if (strangeWaterHitTimer >= STRANGE_WATER_HIT_INTERVAL) {
+			strangeWaterHitTimer = 0;
+			actorManager.hit(1);
+		}
 	}
 	
     /// Destrói blocos quebráveis atingidos durante o dash.
