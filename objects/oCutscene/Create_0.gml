@@ -20,6 +20,6 @@ function start(_inst) {
 	if (finished) return;
 	
 	if (!instance_exists(_inst)) {
-		createActor(192, 64, "Game", _inst, variables);
+		createActor(192, 72, "Game", _inst, variables);
 	}
 }

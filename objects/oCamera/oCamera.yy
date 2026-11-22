@@ -17,7 +17,7 @@
     "path":"folders/Objects.yy",
   },
   "parentObjectId":null,
-  "persistent":false,
+  "persistent":true,
   "physicsAngularDamping":0.0,
   "physicsDensity":0.0,
   "physicsFriction":0.0,

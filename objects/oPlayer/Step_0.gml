@@ -36,6 +36,7 @@ if (in_cutscene()) {
 
 // TODO: Encontrar um lugar melhor para isso
 handle_water_regen();
+handle_strange_water_hit();
 
 var _dir = keys.right - keys.left;
 if (_dir != 0) {

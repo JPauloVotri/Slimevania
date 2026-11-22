@@ -38,15 +38,19 @@ function RoomManager() constructor {
             return;
         }
 
-        room_goto(_room);
-		
-		var _transitionError = new Vector2(-32, -32);
-		_transitionError.componentMultiplyRW(_transitionDir.sign());
-
         if (instance_exists(oPlayer)) {
-            oPlayer.x -= (_transitionDir.x * room_width) + _transitionError.x;
-            oPlayer.y -= (_transitionDir.y * room_height) + _transitionError.y;
+            var _transitionError = new Vector2(-32, -32);
+            _transitionError.componentMultiplyRW(_transitionDir.sign());
+
+            var _destinationInfo = room_get_info(_room, false, false, false, false, false);
+            var _width = (_transitionDir.x < 0) ? _destinationInfo.width : room_width;
+            var _height = (_transitionDir.y < 0) ? _destinationInfo.height : room_height;
+
+            oPlayer.x -= (_transitionDir.x * _width) + _transitionError.x;
+            oPlayer.y -= (_transitionDir.y * _height) + _transitionError.y;
         }
+
+        room_goto(_room);
     }
 
     /// Retorna as coordenadas de uma sala específica.
@@ -237,7 +241,7 @@ function RoomManager() constructor {
 
 	        // Esquerda -> direita da room vizinha.
 	        if (_dir.x == -1 && _x <= 0) {
-	            _neighborX = room_get_width(_neighborRoom) - _blockSize;
+	            _neighborX = room_get_info(_neighborRoom, false, false, false, false, false).width - _blockSize;
 	            _connected = true;
 	        }
 
@@ -249,7 +253,7 @@ function RoomManager() constructor {
 
 	        // Cima -> baixo da room vizinha.
 	        if (_dir.y == -1 && _y <= 0) {
-	            _neighborY = room_get_height(_neighborRoom) - _blockSize;
+	            _neighborY = room_get_info(_neighborRoom, false, false, false, false, false).height - _blockSize;
 	            _connected = true;
 	        }
 
