@@ -1,11 +1,15 @@
 object = oShadow;
 
 on_trigger = function(_instance) {
+	orquestrador = instance_find(oCutscene, 0);
+	
+	if (instance_exists(orquestrador)) {
+		orquestrador.destroyActor();
+		
+		oGame.roomManager.destroy_instance_and_persist(orquestrador);
+	}
+	
     with (oTrigger) {
-        oGame.roomManager.destroy_instance_and_persist(self);
-    }
-
-    with (oShadow) {
         oGame.roomManager.destroy_instance_and_persist(self);
     }
 

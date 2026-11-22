@@ -38,15 +38,19 @@ function RoomManager() constructor {
             return;
         }
 
-        room_goto(_room);
-		
-		var _transitionError = new Vector2(-32, -32);
-		_transitionError.componentMultiplyRW(_transitionDir.sign());
-
         if (instance_exists(oPlayer)) {
-            oPlayer.x -= (_transitionDir.x * room_width) + _transitionError.x;
-            oPlayer.y -= (_transitionDir.y * room_height) + _transitionError.y;
+            var _transitionError = new Vector2(-32, -32);
+            _transitionError.componentMultiplyRW(_transitionDir.sign());
+
+            var _destinationInfo = room_get_info(_room, false, false, false, false, false);
+            var _width = (_transitionDir.x < 0) ? _destinationInfo.width : room_width;
+            var _height = (_transitionDir.y < 0) ? _destinationInfo.height : room_height;
+
+            oPlayer.x -= (_transitionDir.x * _width) + _transitionError.x;
+            oPlayer.y -= (_transitionDir.y * _height) + _transitionError.y;
         }
+
+        room_goto(_room);
     }
 
     /// Retorna as coordenadas de uma sala específica.
@@ -131,6 +135,140 @@ function RoomManager() constructor {
             }
         }
     }
+	
+	/// Verifica se uma instância foi registrada como destruída.
+	/// @param {Id.Instance} _instance Instância a verificar.
+	/// @returns {Bool}
+	is_instance_destroyed = function(_instance) {
+	    var _roomName = room_get_name(room);
+
+	    if (!variable_struct_exists(destroyedInstances, _roomName)) {
+	        return false;
+	    }
+
+	    var _list = destroyedInstances[$ _roomName];
+
+	    for (var _i = 0; _i < array_length(_list); _i++) {
+	        var _entry = _list[_i];
+
+	        if (
+	            _entry[0] == _instance.object_index &&
+	            _entry[1] == _instance.x &&
+	            _entry[2] == _instance.y
+	        ) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
+	
+	/// Registra a destruição de um objeto em uma room específica.
+	/// @param {Asset.GMRoom} _room
+	/// @param {Asset.GMObject} _object
+	/// @param {Real} _x
+	/// @param {Real} _y
+	register_destroyed_instance = function(_room, _object, _x, _y) {
+	    var _roomName = room_get_name(_room);
+
+	    if (!variable_struct_exists(destroyedInstances, _roomName)) {
+	        destroyedInstances[$ _roomName] = [];
+	    }
+
+	    var _list = destroyedInstances[$ _roomName];
+
+	    // Evita registros duplicados.
+	    for (var _i = 0; _i < array_length(_list); _i++) {
+	        var _entry = _list[_i];
+
+	        if (
+	            _entry[0] == _object &&
+	            _entry[1] == _x &&
+	            _entry[2] == _y
+	        ) {
+	            return;
+	        }
+	    }
+
+	    array_push(
+	        destroyedInstances[$ _roomName],
+	        [_object, _x, _y]
+	    );
+	}
+	
+	/// Destrói um bloco e sincroniza com as rooms vizinhas.
+	/// @param {Id.Instance} _instance Bloco a ser destruído.
+	destroy_connected_block = function(_instance) {
+	    var _object = _instance.object_index;
+	    var _x = _instance.x;
+	    var _y = _instance.y;
+
+	    // Registra a destruição na room atual.
+	    register_destroyed_instance(room, _object, _x, _y);
+
+	    var _roomPos = get_current_room_position();
+
+	    var _blockSize = 32;
+
+	    // Direções: direita, baixo, esquerda, cima.
+	    var _directions = [
+	        new Vector2(1, 0),
+	        new Vector2(0, 1),
+	        new Vector2(-1, 0),
+	        new Vector2(0, -1)
+	    ];
+
+	    for (var _i = 0; _i < array_length(_directions); _i++) {
+	        var _dir = _directions[_i];
+
+	        var _neighborRoom = get_room_on_position(
+	            _roomPos.copy().addRW(_dir)
+	        );
+
+	        if (is_undefined(_neighborRoom)) {
+	            continue;
+	        }
+
+	        var _neighborX = _x;
+	        var _neighborY = _y;
+	        var _connected = false;
+
+	        // Direita -> esquerda da room vizinha.
+	        if (_dir.x == 1 && _x >= room_width - _blockSize) {
+	            _neighborX = 0;
+	            _connected = true;
+	        }
+
+	        // Esquerda -> direita da room vizinha.
+	        if (_dir.x == -1 && _x <= 0) {
+	            _neighborX = room_get_info(_neighborRoom, false, false, false, false, false).width - _blockSize;
+	            _connected = true;
+	        }
+
+	        // Baixo -> cima da room vizinha.
+	        if (_dir.y == 1 && _y >= room_height - _blockSize) {
+	            _neighborY = 0;
+	            _connected = true;
+	        }
+
+	        // Cima -> baixo da room vizinha.
+	        if (_dir.y == -1 && _y <= 0) {
+	            _neighborY = room_get_info(_neighborRoom, false, false, false, false, false).height - _blockSize;
+	            _connected = true;
+	        }
+
+	        if (_connected) {
+	            register_destroyed_instance(
+	                _neighborRoom,
+	                _object,
+	                _neighborX,
+	                _neighborY
+	            );
+	        }
+	    }
+
+	    instance_destroy(_instance, false);
+	}
 
     /// Atualiza os flags de vizinhança da sala atual.
     update_neighbor_flags = function() {
