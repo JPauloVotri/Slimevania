@@ -40,25 +40,26 @@ keys = { };
         idle: [sIdlePlayer, sPlayerIdleMedium, sPlayerIdleSmall],
         walk: [sWalkingPlayer, sPlayerWalkMedium, sPlayerWalkSmall],
         dash: [sDashingPlayer, sPlayerDashMedium, sPlayerDashSmall],
-        air: [sJumpingPlayer, sPlayerAirMedium, sPlayerAirSmall],
+        jump: [sJumpingPlayer, sPlayerAirMedium, sPlayerAirSmall],
+        fall: [sFallingPlayer, sPlayerFallMedium, sPlayerFallSmall],
     };
 
     animName = "idle";
 
     /// Troca a animação em execução e o sprite do tamanho atual.
-    /// @param {String} _name idle, walk, dash ou air.
+    /// @param {String} _name idle, walk, dash, jump ou fall.
     play_animation = function(_name) {
         if (animName == _name) return;
 
         animName = _name;
         sprite_index = ANIM_SPRITES[$ _name][sizeLevel];
         image_index = 0;
-        image_speed = (_name == "air" || _name == "dash") ? 0 : 1;
+        image_speed = 1;
     }
 
-    /// Escolhe o frame do ar conforme a direção do movimento.
-    update_air_frame = function() {
-        image_index = (velocity.y < 0) ? 0 : 1;
+    /// Escolhe a animação aérea conforme a direção do movimento vertical.
+    update_air_animation = function() {
+        play_animation(velocity.y < 0 ? "jump" : "fall");
     }
 #endregion
 
@@ -252,8 +253,7 @@ keys = { };
             onAirInitialXDirection = sign(velocity.x);
             onAirDirectionChanged = false;
 
-            play_animation("air");
-            update_air_frame();
+            update_air_animation();
         }
 
         /** Atualiza o estado "ON_AIR" do jogador
@@ -263,7 +263,7 @@ keys = { };
             if (set_climbing_state()) return;
 
             velocity.y = min(velocity.y + GRAVITY, MAX_FALL_SPEED);
-            update_air_frame();
+            update_air_animation();
 
             if (on_solid() and velocity.y > 0) {
                 collide_y();
@@ -389,8 +389,7 @@ keys = { };
             velocity.rewrite(0, SLIDE_SPEED);
             velocityReminder.rewrite(0, 0);
 
-            play_animation("air");
-            update_air_frame();
+            update_air_animation();
         }
 
         /** Atualiza o estado "CLIMBING" do jogador
@@ -433,7 +432,7 @@ keys = { };
             velocity.x = 0;
             velocityReminder.x = 0;
             velocity.y = keys.up ? -CLIMB_SPEED : SLIDE_SPEED;
-            update_air_frame();
+            update_air_animation();
         }
 
         /** Inicia o estado "LEDGE" do jogador
@@ -445,7 +444,7 @@ keys = { };
             velocityReminder.rewrite(0, 0);
             facing = -climbSide;
 
-            play_animation("air");
+            play_animation("jump");
             image_index = 0;
         }
 
