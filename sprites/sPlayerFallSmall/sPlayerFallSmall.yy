@@ -1,11 +1,11 @@
 {
   "$GMSprite": "v2",
-  "%Name": "sPlayerAirMedium",
+  "%Name": "sPlayerFallSmall",
   "bboxMode": 2,
-  "bbox_bottom": 23,
-  "bbox_left": 4,
-  "bbox_right": 19,
-  "bbox_top": 6,
+  "bbox_bottom": 15,
+  "bbox_left": 3,
+  "bbox_right": 12,
+  "bbox_top": 4,
   "collisionKind": 1,
   "collisionTolerance": 0,
   "DynamicTexturePage": false,
@@ -14,38 +14,31 @@
   "frames": [
     {
       "$GMSpriteFrame": "v1",
-      "%Name": "553a477b-5b1c-45f7-b0dc-6d9b8587ceeb",
-      "name": "553a477b-5b1c-45f7-b0dc-6d9b8587ceeb",
-      "resourceType": "GMSpriteFrame",
-      "resourceVersion": "2.0"
-    },
-    {
-      "$GMSpriteFrame": "v1",
-      "%Name": "09efb757-1733-4339-a715-dd4c836ab19b",
-      "name": "09efb757-1733-4339-a715-dd4c836ab19b",
+      "%Name": "93c52e0e-27f2-4f04-ad7b-aa8569578e2f",
+      "name": "93c52e0e-27f2-4f04-ad7b-aa8569578e2f",
       "resourceType": "GMSpriteFrame",
       "resourceVersion": "2.0"
     }
   ],
   "gridX": 1,
   "gridY": 1,
-  "height": 24,
+  "height": 16,
   "HTile": false,
   "layers": [
     {
       "$GMImageLayer": "",
-      "%Name": "8bd83dd3-d914-486c-ac07-3580f3b33d70",
+      "%Name": "6fbe0e02-0bed-43d4-a5df-8f4f993c0054",
       "blendMode": 0,
       "displayName": "default",
       "isLocked": false,
-      "name": "8bd83dd3-d914-486c-ac07-3580f3b33d70",
+      "name": "6fbe0e02-0bed-43d4-a5df-8f4f993c0054",
       "opacity": 100.0,
       "resourceType": "GMImageLayer",
       "resourceVersion": "2.0",
       "visible": true
     }
   ],
-  "name": "sPlayerAirMedium",
+  "name": "sPlayerFallSmall",
   "nineSlice": null,
   "origin": 4,
   "parent": {
@@ -57,7 +50,7 @@
   "resourceVersion": "2.0",
   "sequence": {
     "$GMSequence": "v1",
-    "%Name": "sPlayerAirMedium",
+    "%Name": "sPlayerFallSmall",
     "autoRecord": true,
     "backdropHeight": 768,
     "backdropImageOpacity": 0.5,
@@ -73,7 +66,7 @@
     },
     "eventStubScript": null,
     "eventToFunction": {},
-    "length": 2.0,
+    "length": 1.0,
     "lockOrigin": false,
     "moments": {
       "$KeyframeStore<MomentsEventKeyframe>": "",
@@ -81,7 +74,7 @@
       "resourceType": "KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion": "2.0"
     },
-    "name": "sPlayerAirMedium",
+    "name": "sPlayerFallSmall",
     "playback": 1,
     "playbackSpeed": 30.0,
     "playbackSpeedType": 0,
@@ -107,39 +100,17 @@
                 "0": {
                   "$SpriteFrameKeyframe": "",
                   "Id": {
-                    "name": "553a477b-5b1c-45f7-b0dc-6d9b8587ceeb",
-                    "path": "sprites/sPlayerAirMedium/sPlayerAirMedium.yy"
+                    "name": "93c52e0e-27f2-4f04-ad7b-aa8569578e2f",
+                    "path": "sprites/sPlayerFallSmall/sPlayerFallSmall.yy"
                   },
                   "resourceType": "SpriteFrameKeyframe",
                   "resourceVersion": "2.0"
                 }
               },
               "Disabled": false,
-              "id": "9af18a72-3dad-494e-add5-b26cd45b4cc2",
+              "id": "3090e3b0-ce1b-472c-9161-4226ee4b7350",
               "IsCreationKey": false,
               "Key": 0.0,
-              "Length": 1.0,
-              "resourceType": "Keyframe<SpriteFrameKeyframe>",
-              "resourceVersion": "2.0",
-              "Stretch": false
-            },
-            {
-              "$Keyframe<SpriteFrameKeyframe>": "",
-              "Channels": {
-                "0": {
-                  "$SpriteFrameKeyframe": "",
-                  "Id": {
-                    "name": "09efb757-1733-4339-a715-dd4c836ab19b",
-                    "path": "sprites/sPlayerAirMedium/sPlayerAirMedium.yy"
-                  },
-                  "resourceType": "SpriteFrameKeyframe",
-                  "resourceVersion": "2.0"
-                }
-              },
-              "Disabled": false,
-              "id": "73bc7194-edc4-4435-9842-70f406526692",
-              "IsCreationKey": false,
-              "Key": 1.0,
               "Length": 1.0,
               "resourceType": "Keyframe<SpriteFrameKeyframe>",
               "resourceVersion": "2.0",
@@ -161,8 +132,8 @@
     ],
     "visibleRange": null,
     "volume": 1.0,
-    "xorigin": 12,
-    "yorigin": 12
+    "xorigin": 8,
+    "yorigin": 8
   },
   "swatchColours": null,
   "swfPrecision": 0.5,
@@ -172,5 +143,5 @@
   },
   "type": 0,
   "VTile": false,
-  "width": 24
+  "width": 16
 }
