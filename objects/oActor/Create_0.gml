@@ -26,9 +26,9 @@ hits = 0;
 
     /// Verifica se o ator está em cima de um objeto sólido.
     /// @returns {Bool} Retorna true se o ator estiver em cima de um objeto sólido, caso contrário retorna false.
-    function on_solid() {
-        return place_meeting(x, y + 1, oBlock) ||
-            place_meeting(x, y + 1, oOneWayBlock) &&
+    function on_solid(_err_y = 0) {
+        return place_meeting(x, y + 1 + _err_y, oBlock) ||
+            place_meeting(x, y + 1 + _err_y, oOneWayBlock) &&
             !place_meeting(x, y, oOneWayBlock) ||
             check_room_limits_collision(0, 1);
     }

@@ -37,10 +37,10 @@ keys = { };
 
 #region Animação
     ANIM_SPRITES = {
-        idle: [sPlayerIdle, sPlayerIdleMedium, sPlayerIdleSmall],
-        walk: [sPlayerWalk, sPlayerWalkMedium, sPlayerWalkSmall],
-        dash: [sPlayerDash, sPlayerDashMedium, sPlayerDashSmall],
-        air: [sPlayerAir, sPlayerAirMedium, sPlayerAirSmall],
+        idle: [sIdlePlayer, sPlayerIdleMedium, sPlayerIdleSmall],
+        walk: [sWalkingPlayer, sPlayerWalkMedium, sPlayerWalkSmall],
+        dash: [sDashingPlayer, sPlayerDashMedium, sPlayerDashSmall],
+        air: [sJumpingPlayer, sPlayerAirMedium, sPlayerAirSmall],
     };
 
     animName = "idle";
@@ -53,7 +53,7 @@ keys = { };
         animName = _name;
         sprite_index = ANIM_SPRITES[$ _name][sizeLevel];
         image_index = 0;
-        image_speed = (_name == "air") ? 0 : 1;
+        image_speed = (_name == "air" || _name == "dash") ? 0 : 1;
     }
 
     /// Escolhe o frame do ar conforme a direção do movimento.
@@ -326,7 +326,19 @@ keys = { };
          * @self Asset.GMObject.oPlayer
          */
         var dashing_update = function() {
-            var _timeout = stateMachine.time / game_get_speed(gamespeed_fps) > DASH_DURATION;
+            var _elapsed = stateMachine.time / game_get_speed(gamespeed_fps);
+            var _progress = _elapsed / DASH_DURATION;
+            var _timeout = _elapsed > DASH_DURATION;
+
+            // Segura a segunda pose e libera as poses finais pelo tempo do dash.
+            if (_progress >= .9) {
+                image_index = image_number - 1;
+            } else if (_progress >= .7) {
+                image_index = min(2, image_number - 1);
+            } else {
+                image_index = min(1, floor(_elapsed * sprite_get_speed(sprite_index)));
+            }
+
             var _mod = stateMachine.time % 2;
 
             if (_mod == 0) {
@@ -532,7 +544,7 @@ keys = { };
 
     sprite_index = ANIM_SPRITES.idle[sizeLevel];
     image_index = 0;
-    image_speed = 1;
+    //image_speed = 1;
 #endregion
 
 #region Funções do player

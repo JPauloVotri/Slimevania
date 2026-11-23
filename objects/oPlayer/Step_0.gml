@@ -1,7 +1,5 @@
 #region Inputs
     var _keys = oGame.inputKeys;
-	
-	var _getHit = keyboard_check_pressed(ord("R"));
 
     keys.left = _keys.left.check();
     keys.right = _keys.right.check();
@@ -16,10 +14,6 @@
     keys.aimDiagDown = _keys.shoulderLeft.check();
     keys.resetSize = _keys.pad4.check_pressed();
 #endregion
-
-if (_getHit) {
-	actorManager.hit(4);
-}
 
 if (in_cutscene()) {
     keys.left = 0;
