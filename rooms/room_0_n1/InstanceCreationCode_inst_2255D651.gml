@@ -12,5 +12,5 @@ variables = {
 };
 
 if (!oGame.roomManager.is_instance_destroyed(id)) {
-	start(oShadow);
+	start(oShadow, 192, 88);
 }

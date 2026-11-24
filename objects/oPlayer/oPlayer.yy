@@ -34,9 +34,12 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sPlayerIdle",
-    "path":"sprites/sPlayerIdle/sPlayerIdle.yy",
+    "name":"sIdlePlayer",
+    "path":"sprites/sIdlePlayer/sIdlePlayer.yy",
   },
-  "spriteMaskId":null,
+  "spriteMaskId":{
+    "name":"sPlayerRect",
+    "path":"sprites/sPlayerRect/sPlayerRect.yy",
+  },
   "visible":true,
 }

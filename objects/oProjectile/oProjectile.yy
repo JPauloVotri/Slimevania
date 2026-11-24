@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sProjectile",
-    "path":"sprites/sProjectile/sProjectile.yy",
+    "name":"sProjectilePlayer",
+    "path":"sprites/sProjectilePlayer/sProjectilePlayer.yy",
   },
   "spriteMaskId":null,
   "visible":true,
