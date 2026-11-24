@@ -40,7 +40,7 @@ keys = { };
         idle: [sIdlePlayer, sPlayerIdleMedium, sPlayerIdleSmall],
         walk: [sWalkingPlayer, sPlayerWalkMedium, sPlayerWalkSmall],
         dash: [sDashingPlayer, sPlayerDashMedium, sPlayerDashSmall],
-        jump: [sJumpingPlayer, sPlayerAirMedium, sPlayerAirSmall],
+        jump: [sJumpingPlayer, sPlayerJumpMedium, sPlayerJumpSmall],
         fall: [sFallingPlayer, sPlayerFallMedium, sPlayerFallSmall],
     };
 
@@ -54,12 +54,22 @@ keys = { };
         animName = _name;
         sprite_index = ANIM_SPRITES[$ _name][sizeLevel];
         image_index = 0;
-        image_speed = 1;
+        image_speed = (_name == "jump" || _name == "fall" || _name == "dash") ? 0 : 1;
     }
 
     /// Escolhe a animação aérea conforme a direção do movimento vertical.
     update_air_animation = function() {
-        play_animation(velocity.y < 0 ? "jump" : "fall");
+        var _rising = velocity.y < 0;
+        var _nextAnimation = _rising ? "jump" : "fall";
+        var _changed = animName != _nextAnimation;
+        play_animation(_nextAnimation);
+
+        if (!_rising && on_solid(7)) {
+            image_index = min(2, image_number - 1);
+        } else if (!_changed) {
+            var _frameStep = sprite_get_speed(sprite_index) / game_get_speed(gamespeed_fps);
+            image_index = min(image_index + _frameStep, 1, image_number - 1);
+        }
     }
 #endregion
 
@@ -82,41 +92,15 @@ keys = { };
         return 1 - sizeLevel * SIZE_STEP;
     }
 
-    /// Troca o tamanho; ao crescer ancora os pés no chão.
+    /// Troca o tamanho visual mantendo a máscara de colisão fixa.
     /// @param {Real} _level Nível de tamanho alvo.
-    /// @returns {Bool} False se não couber (teto/parede no caminho).
+    /// @returns {Bool} True quando o nível solicitado foi aplicado.
     set_size_level = function(_level) {
         _level = clamp(_level, 0, MIN_SIZE_LEVEL);
         if (_level == sizeLevel) return true;
 
-        var _oldSprite = sprite_index;
-        var _oldBottom = bbox_bottom;
-        var _oldLeft = x - bbox_left;
-        var _oldRight = bbox_right - x;
-
         sprite_index = ANIM_SPRITES[$ animName][_level];
-
-        var _baseY = y;
-        if (bbox_bottom > _oldBottom) {
-            _baseY = y + (_oldBottom - bbox_bottom);
-        }
-        var _maxLift = max((x - bbox_left) - _oldLeft, (bbox_right - x) - _oldRight, 0) + 1;
-        var _newY = _baseY;
-
-        while (
-            _newY > _baseY - _maxLift &&
-            (place_meeting(x, _newY, oBlock) || check_room_limits_collision(0, _newY - y))
-        ) {
-            _newY--;
-        }
-
-        if (place_meeting(x, _newY, oBlock) || check_room_limits_collision(0, _newY - y)) {
-            sprite_index = _oldSprite;
-            return false;
-        }
-
         sizeLevel = _level;
-        y = _newY;
         shotsOnLevel = 0;
         return true;
     }
@@ -198,6 +182,7 @@ keys = { };
             if (keys.jump) {
                 oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
+                stateMachine.change_state(PLAYER_STATES.ON_AIR);
             } else if (_isOnOneWay && keys.descend) {
                 y++;
             }
@@ -241,6 +226,7 @@ keys = { };
             if (keys.jump) {
                 oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
+                stateMachine.change_state(PLAYER_STATES.ON_AIR);
             } else if (_isOnOneWay && keys.descend) {
                 y++;
             }
@@ -446,6 +432,7 @@ keys = { };
 
             play_animation("jump");
             image_index = 0;
+            image_speed = 1;
         }
 
         /** Atualiza o estado "LEDGE" do jogador
@@ -660,11 +647,10 @@ keys = { };
 #endregion
 
 #region Funções de projéteis
-    /// Dispara um projétil a partir da "boca" do slime. O deslocamento usa a
-    /// meia largura em módulo, porque image_xscale é espelhado pela direção.
+    /// Dispara um projétil a partir da "boca" do slime, conforme o tamanho visual.
     /// @param {Struct.Vector2} _dir Direção normalizada do disparo.
     function shoot_projectile(_dir) {
-        var _offset = abs(sprite_width) * 0.5;
+        var _offset = abs(sprite_width) * get_size_fraction() * 0.5;
         var _position = new Vector2(x, y).addRW(_dir.copy().scaleRW(_offset));
 
         /// @self Id.Instance.oProjectile

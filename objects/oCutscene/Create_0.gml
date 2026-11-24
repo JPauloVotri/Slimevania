@@ -16,10 +16,10 @@ function destroyActor() {
 	finished = true;
 }
 
-function start(_inst) {
+function start(_inst, _x, _y) {
 	if (finished) return;
 	
 	if (!instance_exists(_inst)) {
-		createActor(192, 72, "Game", _inst, variables);
+		createActor(_x, _y, "Game", _inst, variables);
 	}
 }
