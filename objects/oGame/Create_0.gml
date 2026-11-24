@@ -160,6 +160,10 @@ function open_pause_menu() {
         new MenuOption("Salvar"),
         new MenuOption("Carregar"),
         new MenuOption("Opções"),
+        new MenuOption("Reiniciar", function(_menuInstance) {
+            instance_destroy(_menuInstance);
+            game_restart();
+        }),
         new MenuOption("Sair", function() {
             game_end();
         }),
