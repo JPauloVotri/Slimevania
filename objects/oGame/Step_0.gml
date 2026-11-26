@@ -1,6 +1,12 @@
 #macro KEY_STUTTER_DELAY 20
 #macro KEY_STUTTER_INTERVAL 10
 
+if (deathPlayer != noone) {
+    // Na própria sala inicial, espera a reativação sem depender de um Room Start.
+    if (respawnPending && room == room_0_0) finish_respawn();
+    exit;
+}
+
 if (inputKeys.start.check_pressed() && !isPaused) {
     toggle_pause_game();
 }

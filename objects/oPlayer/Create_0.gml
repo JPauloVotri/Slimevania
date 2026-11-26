@@ -1,7 +1,23 @@
+// A sala inicial já contém um ponto de partida para uma partida nova.
+if (instance_number(oPlayer) > 1) {
+    instance_destroy();
+    exit;
+}
+
 // Herda os eventos do objeto pai
 event_inherited();
 
-actorManager = new ActorManager(self);
+respawnX = x;
+respawnY = y;
+isDying = false;
+actorManager = new ActorManager(self, {
+    can_take_damage: function(_player) {
+        return !_player.isDying && _player.stateMachine.state.name != PLAYER_STATES.DASHING;
+    },
+    on_death: function(_player) {
+        _player.begin_death();
+    }
+});
 
 WATER_HEAL_INTERVAL = game_get_speed(gamespeed_fps) * .5; // meio segundo em frames (30)
 STRANGE_WATER_HIT_INTERVAL = game_get_speed(gamespeed_fps) * .8
@@ -33,15 +49,18 @@ keys = { };
     DASH_DURATION = .2;
     DASH_SPEED = 8;
     DASH_RECHARGE = 2;
+    // Alcance horizontal das poses esticadas, por tamanho do jogador.
+    DASH_HIT_REACH = [14, 10, 7];
+    dashSerial = 0;
 #endregion
 
 #region Animação
     ANIM_SPRITES = {
-        idle: [sIdlePlayer, sPlayerIdleMedium, sPlayerIdleSmall],
-        walk: [sWalkingPlayer, sPlayerWalkMedium, sPlayerWalkSmall],
-        dash: [sDashingPlayer, sPlayerDashMedium, sPlayerDashSmall],
-        jump: [sJumpingPlayer, sPlayerJumpMedium, sPlayerJumpSmall],
-        fall: [sFallingPlayer, sPlayerFallMedium, sPlayerFallSmall],
+        idle: [sIdlePlayer, sIdleMediumPlayer, sIdleSmallPlayer],
+        walk: [sWalkingPlayer, sWalkingMediumPlayer, sWalkingSmallPlayer],
+        dash: [sDashingPlayer, sDashingMediumPlayer, sDashingSmallPlayer],
+        jump: [sJumpingPlayer, sJumpingMediumPlayer, sJumpingSmallPlayer],
+        fall: [sFallingPlayer, sFallingMediumPlayer, sFallingSmallPlayer],
     };
 
     animName = "idle";
@@ -76,7 +95,6 @@ keys = { };
 #region Tamanho (massa)
     sizeLevel = 0;
     MIN_SIZE_LEVEL = array_length(ANIM_SPRITES.idle) - 1;
-    SIZE_STEP = .5 / MIN_SIZE_LEVEL;
     shotsPerSizeLevel = 2;
     shotsOnLevel = 0;
 
@@ -86,13 +104,7 @@ keys = { };
         return sizeLevel < MIN_SIZE_LEVEL;
     }
 
-    /// Retorna a fração atual do tamanho cheio.
-    /// @returns {Real} Fração do tamanho (1 = cheio, .5 = mínimo).
-    get_size_fraction = function() {
-        return 1 - sizeLevel * SIZE_STEP;
-    }
-
-    /// Troca o tamanho visual mantendo a máscara de colisão fixa.
+    /// Troca o tamanho e aplica o sprite correspondente à animação atual.
     /// @param {Real} _level Nível de tamanho alvo.
     /// @returns {Bool} True quando o nível solicitado foi aplicado.
     set_size_level = function(_level) {
@@ -287,6 +299,7 @@ keys = { };
          * @self Asset.GMObject.oPlayer
          */
         var dashing_create = function() {
+            dashSerial++;
             recharge = DASH_RECHARGE;
             ignoreSlopeDown = true;
 
@@ -533,6 +546,42 @@ keys = { };
     //image_speed = 1;
 #endregion
 
+#region Morte e renascimento
+    function begin_death() {
+        isDying = true;
+        shotFrame = -1;
+        velocity.rewrite(0, 0);
+        velocityReminder.rewrite(0, 0);
+        var _deathSprites = [sDyingPlayer, sDyingMediumPlayer, sDyingSmallPlayer];
+        sprite_index = _deathSprites[sizeLevel];
+        image_index = 0;
+        image_speed = 0;
+        oGame.deathPlayer = id;
+        audio_pause_all();
+    }
+
+    function respawn() {
+        x = respawnX;
+        y = respawnY;
+        actorManager.healActor(hits);
+        stateMachine.change_state(PLAYER_STATES.IDLE);
+        sizeLevel = 0;
+        shotsOnLevel = 0;
+        recharge = 0;
+        waterHealTimer = 0;
+        strangeWaterHitTimer = 0;
+        velocity.rewrite(0, 0);
+        velocityReminder.rewrite(0, 0);
+        facing = 1;
+        image_xscale = 1;
+        animName = "idle";
+        sprite_index = ANIM_SPRITES.idle[sizeLevel];
+        image_index = 0;
+        image_speed = 1;
+        isDying = false;
+    }
+#endregion
+
 #region Funções do player
 	/// Regenera vida enquanto o jogador estiver dentro da água.
 	function handle_water_regen() {
@@ -574,6 +623,30 @@ keys = { };
 
         if (_crackedBlock) {
             oGame.roomManager.destroy_connected_block(_crackedBlock);
+        }
+    }
+
+    /// Detecta inimigos na área percorrida pelo DASH, incluindo entre os pontos de início e fim.
+    function hit_enemies_with_dash(_startX, _startY) {
+        var _dy = y - _startY;
+        var _top = bbox_top - _dy;
+        var _bottom = bbox_bottom - _dy;
+        var _reach = DASH_HIT_REACH[sizeLevel];
+        var _left = x - _reach;
+        var _right = x + _reach;
+        var _dash = dashSerial;
+        var _sweepLeft = min(_startX, x) - _reach;
+        var _sweepRight = max(_startX, x) + _reach;
+        var _sweepTop = min(_top, bbox_top);
+        var _sweepBottom = max(_bottom, bbox_bottom);
+
+        // Varre o trecho horizontal e depois o vertical, na ordem usada pelo movimento.
+        with (oEnemy) {
+            var _hitX = bbox_left <= _sweepRight && bbox_right >= _sweepLeft
+                && bbox_top <= _bottom && bbox_bottom >= _top;
+            var _hitY = bbox_left <= _right && bbox_right >= _left
+                && bbox_top <= _sweepBottom && bbox_bottom >= _sweepTop;
+            if (_hitX || _hitY) receive_dash(_dash);
         }
     }
 
@@ -647,15 +720,39 @@ keys = { };
 #endregion
 
 #region Funções de projéteis
-    /// Dispara um projétil a partir da "boca" do slime, conforme o tamanho visual.
-    /// @param {Struct.Vector2} _dir Direção normalizada do disparo.
-    function shoot_projectile(_dir) {
-        var _offset = abs(sprite_width) * get_size_fraction() * 0.5;
-        var _position = new Vector2(x, y).addRW(_dir.copy().scaleRW(_offset));
+    SHOOT_SPRITES = [sShootingPlayer, sShootingMediumPlayer, sShootingSmallPlayer];
+    SHOT_RELEASE_FRAME = 4;
+    // Posição da boca no quadro de disparo de cada tamanho que pode atirar.
+    SHOT_MOUTH = [[20, 27], [19, 28]];
+    shotFrame = -1;
+    shotDirection = undefined;
+    shotFacing = 1;
 
-        /// @self Id.Instance.oProjectile
-        with (instance_create_depth(_position.x, _position.y, depth - 1, oProjectile)) {
-            velocity.rewriteRW(_dir.scaleRW(SPEED));
+    /// Atualiza a animação do tiro separadamente da animação de movimento.
+    function update_shot() {
+        if (shotFrame < 0) return;
+        if (in_cutscene()) {
+            shotFrame = -1;
+            return;
         }
+
+        var _sprite = SHOOT_SPRITES[sizeLevel];
+        var _previousFrame = shotFrame;
+        shotFrame += sprite_get_speed(_sprite) / game_get_speed(gamespeed_fps);
+
+        if (_previousFrame < SHOT_RELEASE_FRAME && shotFrame >= SHOT_RELEASE_FRAME && can_shoot()) {
+            var _mouth = SHOT_MOUTH[sizeLevel];
+            var _mouthX = x + (_mouth[0] - sprite_get_xoffset(_sprite)) * shotFacing;
+            var _mouthY = y + (_mouth[1] - sprite_get_yoffset(_sprite)) * image_yscale;
+            var _direction = shotDirection;
+
+            /// @self Id.Instance.oProjectile
+            with (instance_create_depth(_mouthX, _mouthY, depth - 1, oProjectile)) {
+                launch(_direction);
+            }
+            register_shot();
+        }
+
+        if (shotFrame >= sprite_get_number(_sprite)) shotFrame = -1;
     }
 #endregion

@@ -1,3 +1,5 @@
+if (isDying) exit;
+
 #region Inputs
     var _keys = oGame.inputKeys;
 
@@ -31,6 +33,7 @@ if (in_cutscene()) {
 // TODO: Encontrar um lugar melhor para isso
 handle_water_regen();
 handle_strange_water_hit();
+if (isDying) exit;
 
 var _dir = keys.right - keys.left;
 if (_dir != 0) {
@@ -46,10 +49,14 @@ handle_power_up_pickup();
 
 #region Máquina de estados e movimento
     stateMachine.update();
-    move(velocity);
-
     if (facing != 0) {
         image_xscale = facing;
+    }
+    var _startX = x;
+    var _startY = y;
+    move(velocity);
+    if (stateMachine.state.name == PLAYER_STATES.DASHING) {
+        hit_enemies_with_dash(_startX, _startY);
     }
 #endregion
 
@@ -64,11 +71,11 @@ if (facing != 0) {
 
 _aimDir.normalizedRW();
 
-if (keys.shoot) {
-    if (_aimDir.magnitude() > 0 && can_shoot()) {
-        shoot_projectile(_aimDir);
-        register_shot();
-    }
+update_shot();
+if (keys.shoot && shotFrame < 0 && _aimDir.magnitude() > 0 && can_shoot()) {
+    shotFrame = 0;
+    shotDirection = _aimDir;
+    shotFacing = facing;
 }
 
 // TODO: remover — reset temporário para teste

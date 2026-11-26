@@ -1,3 +1,5 @@
+if (oGame.deathPlayer != noone) exit;
+
 var _followedSpeed = new Vector2(0, 0);
 
 if (target != noone) {
