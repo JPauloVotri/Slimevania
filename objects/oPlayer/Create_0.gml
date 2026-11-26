@@ -597,22 +597,22 @@ keys = { };
 	        actorManager.healActor(1);
 	    }
 	}
-	
+
 	/// Retira vida enquanto o jogador estiver dentro da água estranha.
 	function handle_strange_water_hit() {
 		if (!place_meeting(x, y, oStrangeWater)) {
 			strangeWaterHitTimer = 0;
 			return;
 		}
-		
+
 		strangeWaterHitTimer++;
-		
+
 		if (strangeWaterHitTimer >= STRANGE_WATER_HIT_INTERVAL) {
 			strangeWaterHitTimer = 0;
 			actorManager.hit(1);
 		}
 	}
-	
+
     /// Destrói blocos quebráveis atingidos durante o dash.
     function handle_dash_cracked_block_collision() {
         var _crackedBlock = instance_place(
