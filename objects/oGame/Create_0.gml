@@ -16,6 +16,43 @@ menuMapDraw = new MapDraw(roomManager.map, _menuMapPosition, _menuMapSize.x, _me
 menuMapCenter = new Vector2(0, 0);
 isPaused = false;
 pauseBackground = noone;
+deathPlayer = noone;
+deathFrozen = false;
+respawnPending = false;
+
+/// Mantém ativos apenas a apresentação da cena e o jogador que está morrendo.
+function freeze_death_scene() {
+    var _player = deathPlayer;
+    with (all) {
+        if (id != _player && object_index != oGame && object_index != oCamera) {
+            instance_deactivate_object(id);
+        }
+    }
+    deathFrozen = true;
+    _player.image_speed = 1;
+}
+
+function return_to_spawn() {
+    if (respawnPending) return;
+    respawnPending = true;
+    instance_activate_all();
+    if (room != room_0_0) room_goto(room_0_0);
+}
+
+function finish_respawn() {
+    deathPlayer.respawn();
+    with (oEnemy) {
+        if (enemyState != ENEMY_STATE.DEAD) health = MAX_LIFE;
+    }
+    with (oCamera) {
+        clear_death_surface();
+        snap_to_player();
+    }
+    deathPlayer = noone;
+    deathFrozen = false;
+    respawnPending = false;
+    audio_resume_all();
+}
 
 #region Inputs
     gamepads = []; // Variável que será usada para listagem de controles.
@@ -160,6 +197,10 @@ function open_pause_menu() {
         new MenuOption("Salvar"),
         new MenuOption("Carregar"),
         new MenuOption("Opções"),
+        new MenuOption("Reiniciar", function(_menuInstance) {
+            instance_destroy(_menuInstance);
+            game_restart();
+        }),
         new MenuOption("Sair", function() {
             game_end();
         }),
