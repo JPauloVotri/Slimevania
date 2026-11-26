@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"medium",
-    "path":"folders/Sprites/Actor/Player/medium.yy",
+    "name":"old",
+    "path":"folders/Sprites/Actor/Player/old.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
