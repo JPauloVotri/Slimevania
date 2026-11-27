@@ -19,6 +19,7 @@ if (droping) {
 				break;
 			} else if (_instance != noone && _instance.object_index != oPlayer) {
 				if (instance_exists(inst)) inst.alarm[0] = 120;
+				sfx_at(sndDrip, x, y, .2, .15);
 				instance_destroy();
 				break;
 			}
