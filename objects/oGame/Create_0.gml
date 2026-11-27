@@ -11,6 +11,9 @@ var _menuMapSize = new Vector2(
 );
 
 roomManager = new RoomManager();
+musicManager = new MusicManager();
+if (!instance_exists(oScenery)) instance_create_depth(0, 0, 1000, oScenery);
+if (!instance_exists(oSceneryFront)) instance_create_depth(0, 0, -100, oSceneryFront);
 miniMapDraw = new MapDraw(roomManager.map, _minimapPosition, 5, 5);
 menuMapDraw = new MapDraw(roomManager.map, _menuMapPosition, _menuMapSize.x, _menuMapSize.y);
 menuMapCenter = new Vector2(0, 0);
@@ -179,6 +182,7 @@ function toggle_pause_game() {
     if (isPaused) {
         instance_deactivate_all(true);
         audio_pause_all();
+        sfx(sndPause, .6, 0);
         open_pause_menu();
         menuMapCenter.rewriteRW(roomManager.get_current_room_position());
     } else {
@@ -199,6 +203,7 @@ function open_pause_menu() {
         new MenuOption("Opções"),
         new MenuOption("Reiniciar", function(_menuInstance) {
             instance_destroy(_menuInstance);
+            audio_stop_all();
             game_restart();
         }),
         new MenuOption("Sair", function() {

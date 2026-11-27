@@ -139,6 +139,7 @@ stateMachine = new StateMachine();
      */
     var dashing_create = function() {
         recharge = DASH_RECHARGE;
+        sfx(sndDash, .6);
 
         var _direction = new Vector2(
             keys.right - keys.left,
@@ -233,6 +234,7 @@ stateMachine = new StateMachine();
         );
 
         if (_crackedBlock) {
+            sfx(sndBlockBreak, .9);
             oGame.roomManager.destroy_instance_and_persist(_crackedBlock);
         }
     }

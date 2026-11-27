@@ -51,7 +51,12 @@ function receive_dash(_dash) {
 function receive_damage(_damage) {
     if (enemyState == ENEMY_STATE.DEAD) return false;
     health = max(0, health - _damage);
-    if (health > 0) return true;
+    if (health > 0) {
+        sfx(sndEnemyHurt, .7);
+        return true;
+    }
+
+    sfx(sndEnemyDeath, .9);
 
     // A sala recria a instância na posição inicial, mesmo que ela tenha se movido.
     oGame.roomManager.register_destroyed_instance(room, object_index, xstart, ystart);
@@ -425,6 +430,7 @@ function update_attack(_player, _dt) {
     with (instance_create_depth(_shot.mouthX, _shot.mouthY, depth - 1, oProjectileEnemy)) {
         launch(_direction);
     }
+    sfx_at(sndEnemyShoot, x, y, .6, .08);
     shotCooldown = SHOT_COOLDOWN;
 }
 

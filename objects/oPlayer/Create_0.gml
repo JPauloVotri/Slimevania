@@ -14,6 +14,9 @@ actorManager = new ActorManager(self, {
     can_take_damage: function(_player) {
         return !_player.isDying && _player.stateMachine.state.name != PLAYER_STATES.DASHING;
     },
+    on_hit: function(_player) {
+        sfx(sndPlayerHurt, .8);
+    },
     on_death: function(_player) {
         _player.begin_death();
     }
@@ -119,6 +122,7 @@ keys = { };
 
     /// Perde um nível de massa ao atirar.
     shrink = function() {
+        if (sizeLevel < MIN_SIZE_LEVEL) sfx(sndShrink, .45);
         return set_size_level(sizeLevel + 1);
     }
 
@@ -194,6 +198,7 @@ keys = { };
             if (keys.jump) {
                 oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
+                sfx(sndJump, .7);
                 stateMachine.change_state(PLAYER_STATES.ON_AIR);
             } else if (_isOnOneWay && keys.descend) {
                 y++;
@@ -238,6 +243,7 @@ keys = { };
             if (keys.jump) {
                 oGame.inputKeys.pad1.fully_press();
                 velocity.y = -JUMP_SPEED;
+                sfx(sndJump, .7);
                 stateMachine.change_state(PLAYER_STATES.ON_AIR);
             } else if (_isOnOneWay && keys.descend) {
                 y++;
@@ -265,6 +271,7 @@ keys = { };
 
             if (on_solid() and velocity.y > 0) {
                 collide_y();
+                sfx(sndLand, .5, .1);
                 stateMachine.change_state(PLAYER_STATES.IDLE);
                 return;
             }
@@ -301,6 +308,7 @@ keys = { };
         var dashing_create = function() {
             dashSerial++;
             recharge = DASH_RECHARGE;
+            sfx(sndDash, .8);
             ignoreSlopeDown = true;
 
             play_animation("dash");
@@ -446,6 +454,7 @@ keys = { };
             play_animation("jump");
             image_index = 0;
             image_speed = 1;
+            sfx(sndLedge, .6);
         }
 
         /** Atualiza o estado "LEDGE" do jogador
@@ -558,6 +567,7 @@ keys = { };
         image_speed = 0;
         oGame.deathPlayer = id;
         audio_pause_all();
+        sfx(sndPlayerDeath, 1, 0);
     }
 
     function respawn() {
@@ -579,6 +589,7 @@ keys = { };
         image_index = 0;
         image_speed = 1;
         isDying = false;
+        sfx(sndRespawn, .7, 0);
     }
 #endregion
 
@@ -594,6 +605,7 @@ keys = { };
 
 	    if (waterHealTimer >= WATER_HEAL_INTERVAL) {
 	        waterHealTimer = 0;
+	        if (hits > 0) sfx(sndHeal, .4, .15);
 	        actorManager.healActor(1);
 	    }
 	}
@@ -609,6 +621,7 @@ keys = { };
 
 		if (strangeWaterHitTimer >= STRANGE_WATER_HIT_INTERVAL) {
 			strangeWaterHitTimer = 0;
+			sfx(sndStrangeWater, .6);
 			actorManager.hit(1);
 		}
 	}
@@ -622,6 +635,7 @@ keys = { };
         );
 
         if (_crackedBlock) {
+            sfx(sndBlockBreak, .9);
             oGame.roomManager.destroy_connected_block(_crackedBlock);
         }
     }
@@ -661,6 +675,8 @@ keys = { };
             array_push(powersList, _powerUp.name);
             activePower = _powerUp.name;
         }
+
+        sfx(sndPowerUp, .8, 0);
 
         oGame.roomManager.destroy_instance_and_persist(_powerUp);
     }
@@ -750,6 +766,7 @@ keys = { };
             with (instance_create_depth(_mouthX, _mouthY, depth - 1, oProjectile)) {
                 launch(_direction);
             }
+            sfx(sndShoot, .7, .08);
             register_shot();
         }
 
