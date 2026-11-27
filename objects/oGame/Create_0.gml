@@ -12,6 +12,8 @@ var _menuMapSize = new Vector2(
 
 roomManager = new RoomManager();
 musicManager = new MusicManager();
+if (!instance_exists(oScenery)) instance_create_depth(0, 0, 1000, oScenery);
+if (!instance_exists(oSceneryFront)) instance_create_depth(0, 0, -100, oSceneryFront);
 miniMapDraw = new MapDraw(roomManager.map, _minimapPosition, 5, 5);
 menuMapDraw = new MapDraw(roomManager.map, _menuMapPosition, _menuMapSize.x, _menuMapSize.y);
 menuMapCenter = new Vector2(0, 0);
