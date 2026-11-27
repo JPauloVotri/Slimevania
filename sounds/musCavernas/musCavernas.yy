@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"musCavernas",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":1,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":34.285714,
+  "exportDir":"",
+  "name":"musCavernas",
+  "parent":{
+    "name":"Music",
+    "path":"folders/Sounds/Music.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":22050,
+  "soundFile":"musCavernas.wav",
+  "volume":1.0,
+}

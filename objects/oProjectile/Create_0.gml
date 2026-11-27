@@ -21,6 +21,7 @@ function launch(_direction) {
 function on_collision(_instance) {
     if (hasImpacted) return;
     hasImpacted = true;
+    sfx_at(sndProjectileHit, x, y, .5, .12);
     impactX = x;
     impactY = y;
     velocity.rewrite(0, 0);

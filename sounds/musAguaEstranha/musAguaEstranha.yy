@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"musAguaEstranha",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":1,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":41.739138,
+  "exportDir":"",
+  "name":"musAguaEstranha",
+  "parent":{
+    "name":"Music",
+    "path":"folders/Sounds/Music.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":22050,
+  "soundFile":"musAguaEstranha.wav",
+  "volume":1.0,
+}

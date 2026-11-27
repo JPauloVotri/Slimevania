@@ -33,12 +33,17 @@ if (inputs.cancel.check_pressed() || inputs.close.check_pressed()) {
     return;
 }
 
+var _previousHover = hover;
 hover += inputs.next.check_stutter(20, 10) - inputs.previous.check_stutter(20, 10);
 hover = (hover + optionsCount) % optionsCount;
+if (hover != _previousHover) sfx(sndMenuMove, .4, 0);
 
 if ((mouse_check_button_pressed(mb_left) && mouseOver) || inputs.confirm.check_pressed()) {
     var _func = options[hover].action;
-    if (!is_undefined(_func)) _func(self);
+    if (!is_undefined(_func)) {
+        sfx(sndMenuConfirm, .5, 0);
+        _func(self);
+    }
 }
 
 if (!is_undefined(on_step)) {

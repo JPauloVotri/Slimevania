@@ -26,6 +26,8 @@ if (isPaused) {
     return;
 }
 
+musicManager.update();
+
 #region Transição de salas pela posição do Player
     if (instance_exists(oPlayer)) {
         var _dir = get_transition_direction(oPlayer.x, oPlayer.y);
